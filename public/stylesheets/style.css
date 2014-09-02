@@ -1,3 +1,33 @@
 .navbar .logo {
     height: 100%;
 }
+
+.main-container {
+    margin: 0 10px;
+}
+
+.left-nav-bar {
+    min-height: 0;
+    box-shadow: 0 0 10px #BDBDBD;
+    border-radius: 5px;
+    padding: 5px 0;
+}
+
+.left-nav-bar li {
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.left-nav-bar li+li {
+    margin-top: 5px;
+}
+
+.left-nav-bar>.nav>li.active>a,
+.left-nav-bar>.nav>li.active>a:hover,
+.left-nav-bar>.nav>li.active>a:focus {
+    background-color: #8BC21E;
+}
+
+.main-container .main-part {
+    margin-left: -15px;
+}
