@@ -1,3 +1,7 @@
+.bg-landmark {
+    background-color: #8BC21E;
+}
+
 .navbar .logo {
     height: 100%;
 }
@@ -28,6 +32,14 @@
     background-color: #8BC21E;
 }
 
-.main-container .main-part {
-    margin-left: -15px;
+.main-part .divider {
+    height: 1px;
+    margin: 15px 0;
+    overflow: hidden;
+    background-color: #8BC21E;
+}
+
+.btn.btn-landmark {
+    background-color: #8BC21E;
+    border-color: #8ac21d;
 }
