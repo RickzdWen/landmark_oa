@@ -21,7 +21,8 @@ require = {
             'deps' : ['jquery']
         },
         'angular-route' : ['angular'],
-        'angular-resource' : ['angular']
+        'angular-resource' : ['angular'],
+        'bootstrap' : ['jquery']
     },
     config : {
         'app/common/params' : _params || {}

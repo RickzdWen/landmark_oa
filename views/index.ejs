@@ -33,72 +33,83 @@
                 <div class="main-part">
                     <div class="h2">个人设置</div>
                     <div class="divider"></div>
-                        <form class="form-horizontal" role="form">
-                            <div class="form-group">
-                                <label for="nick" class="col-sm-3 control-label">Nick:</label>
-                                <div class="col-sm-6">
-                                    <input type="text" id="nick" class="form-control" placeholder="please input your nick" required>
+                    <div class="row profile-title">
+                        <div class="col-sm-3 col-sm-offset-2 text-right">
+                            <img src="/images/staff/default.jpeg" class="img-rounded user-icon" width="100" height="100">
+                            <div class="btn-upload-wrap"><button class="btn btn-upload">upload</button></div>
+                        </div>
+                        <div class="col-sm-3 text-center staff-title">
+                            <h1>Rick</h1>
+                            <h5>NO.10003</h5>
+                        </div>
+                    </div>
+                    <div class="divider"></div>
+                    <form class="form-horizontal" role="form">
+                        <div class="form-group">
+                            <label for="nick" class="col-sm-3 control-label">Nick:</label>
+                            <div class="col-sm-6">
+                                <input type="text" id="nick" class="form-control" placeholder="please input your nick" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="email" class="col-sm-3 control-label">Email:</label>
+                            <div class="col-sm-6">
+                                <input type="email" id="email" class="form-control" placeholder="please input your email">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="nick_cn" class="col-sm-3 control-label">Chinese Name:</label>
+                            <div class="col-sm-6">
+                                <input type="text" id="nick_cn" class="form-control" placeholder="please input your chinese name">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Sex:</label>
+                            <div class="col-sm-6">
+                                <div class="radio-inline">
+                                    <label><input type="radio" name="sex" value="0" checked>Mail</label>
+                                </div>
+                                <div class="radio-inline">
+                                    <label><input type="radio" name="sex" value="1">Female</label>
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <label for="email" class="col-sm-3 control-label">Email:</label>
-                                <div class="col-sm-6">
-                                    <input type="email" id="email" class="form-control" placeholder="please input your email">
-                                </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="birth" class="col-sm-3 control-label">Birthday:</label>
+                            <div class="col-sm-6">
+                                <input type="date" id="birth" class="form-control">
                             </div>
-                            <div class="form-group">
-                                <label for="nick_cn" class="col-sm-3 control-label">Chinese Name:</label>
-                                <div class="col-sm-6">
-                                    <input type="text" id="nick_cn" class="form-control" placeholder="please input your chinese name">
-                                </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="phone" class="col-sm-3 control-label">Phone:</label>
+                            <div class="col-sm-6">
+                                <input type="tel" id="phone" class="form-control" placeholder="cellphone number">
                             </div>
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">Sex:</label>
-                                <div class="col-sm-6">
-                                    <div class="radio-inline">
-                                        <label><input type="radio" name="sex" value="0" checked>Mail</label>
-                                    </div>
-                                    <div class="radio-inline">
-                                        <label><input type="radio" name="sex" value="1">Female</label>
-                                    </div>
-                                </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="qq" class="col-sm-3 control-label">QQ:</label>
+                            <div class="col-sm-6">
+                                <input type="text" id="qq" class="form-control" placeholder="qq number">
                             </div>
-                            <div class="form-group">
-                                <label for="birth" class="col-sm-3 control-label">Birthday:</label>
-                                <div class="col-sm-6">
-                                    <input type="date" id="birth" class="form-control">
-                                </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="address" class="col-sm-3 control-label">Adress:</label>
+                            <div class="col-sm-6">
+                                <input type="text" id="address" class="form-control" placeholder="your address">
                             </div>
-                            <div class="form-group">
-                                <label for="phone" class="col-sm-3 control-label">Phone:</label>
-                                <div class="col-sm-6">
-                                    <input type="tel" id="phone" class="form-control" placeholder="cellphone number">
-                                </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="desc" class="col-sm-3 control-label">Description:</label>
+                            <div class="col-sm-6">
+                                <textarea id="desc" rows="4" class="form-control" placeholder="write something to describe you ^_^"></textarea>
                             </div>
-                            <div class="form-group">
-                                <label for="qq" class="col-sm-3 control-label">QQ:</label>
-                                <div class="col-sm-6">
-                                    <input type="text" id="qq" class="form-control" placeholder="qq number">
-                                </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-2 col-sm-offset-7">
+                                <button class="btn btn-landmark btn-block">Save</button>
                             </div>
-                            <div class="form-group">
-                                <label for="address" class="col-sm-3 control-label">Adress:</label>
-                                <div class="col-sm-6">
-                                    <input type="text" id="address" class="form-control" placeholder="your address">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="desc" class="col-sm-3 control-label">Description:</label>
-                                <div class="col-sm-6">
-                                    <textarea id="desc" rows="4" class="form-control" placeholder="write something to describe you ^_^"></textarea>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-sm-2 col-sm-offset-7">
-                                    <button class="btn btn-landmark btn-block">Save</button>
-                                </div>
-                            </div>
-                        </form>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>

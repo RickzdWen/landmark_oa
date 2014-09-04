@@ -43,3 +43,23 @@
     background-color: #8BC21E;
     border-color: #8ac21d;
 }
+
+.user-icon {
+    border : 1px solid #333;
+}
+.btn-upload {
+    width: 80px;
+    display: block;
+    padding: 2px 4px;
+}
+.profile-title .btn-upload-wrap {
+    width: 100%;
+}
+.profile-title .btn-upload {
+    float: right;
+    margin-top: 5px;
+    margin-right: 10px;
+}
+.profile-title h1 {
+    font-size: 66px;
+}
