@@ -5,7 +5,8 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
-global.rootPath = __dirname;
+global.ROOT_PATH = __dirname;
+global.DB_CONFIG_FILE = __dirname + '/configs/dbConfig';
 
 var app = express();
 
@@ -19,7 +20,9 @@ app.use(bodyParser.urlencoded());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-require(path.join(rootPath, 'libs/route'))(app, {
+app.use(require(path.join(ROOT_PATH, 'middlewares/loginChecker')).checkOaLogin());
+
+require(path.join(ROOT_PATH, 'middlewares/route'))(app, {
     verbose : true
 });
 
@@ -30,18 +33,22 @@ app.use(function(req, res, next) {
     next(err);
 });
 
-global.dbConfigFile = __dirname + '/configs/dbconfig';
-
 /// error handlers
 // development error handler
 // will print stacktrace
 if (app.get('env') === 'development') {
     app.use(function(err, req, res, next) {
         res.status(err.status || 500);
-        res.render('error', {
-            message: err.message,
-            error: err
-        });
+        if (res._view) {
+            res.render('error', {
+                message: err.message,
+                error: err
+            });
+        } else {
+            console.log(err);
+            res.json(err);
+            res.end();
+        }
     });
 }
 
@@ -49,10 +56,14 @@ if (app.get('env') === 'development') {
 // no stacktraces leaked to user
 app.use(function(err, req, res, next) {
     res.status(err.status || 500);
-    res.render('error', {
-        message: err.message,
-        error: {}
-    });
+    if (res._view) {
+        res.render('error', {
+            message: err.message,
+            error: err
+        });
+    } else {
+        res.render(err);
+    }
 });
 
 

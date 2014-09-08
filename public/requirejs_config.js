@@ -13,7 +13,9 @@ require = {
         'domReady' : '/bower_components/requirejs-domready/domReady',
         'i18n' : '/bower_components/requirejs-i18n/i18n',
         'angular-route' : '/bower_components/angular-route/angular-route.min',
-        'angular-resource' : '/bower_components/angular-resource/angular-resource.min'
+        'angular-resource' : '/bower_components/angular-resource/angular-resource.min',
+        'angular-md5' : '/bower_components/angular-md5/angular-md5.min',
+        'datepicker' : '/bower_components/bootstrap-datepicker/js/bootstrap-datepicker'
     },
     shim : {
         'angular' : {
@@ -22,7 +24,9 @@ require = {
         },
         'angular-route' : ['angular'],
         'angular-resource' : ['angular'],
-        'bootstrap' : ['jquery']
+        'angular-md5' : ['angular'],
+        'bootstrap' : ['jquery'],
+        'datepicker' : ['jquery', 'bootstrap']
     },
     config : {
         'app/common/params' : _params || {}

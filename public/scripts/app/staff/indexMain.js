@@ -5,7 +5,7 @@
 require([
     'domReady!',
     'jquery',
-    'bootstrap'
+    'datepicker'
 ], function(doc, $){
-
+    $('.input-group.date').datepicker({});
 });

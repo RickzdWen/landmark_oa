@@ -3,7 +3,7 @@
  */
 var mysql = require('mysql');
 var path = require('path');
-var dbConfig = require(dbConfigFile);
+var dbConfig = require(DB_CONFIG_FILE);
 var pools = {};
 
 var manager = {

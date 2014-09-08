@@ -63,3 +63,48 @@
 .profile-title h1 {
     font-size: 66px;
 }
+
+.remember {
+    margin-top: 3px;
+}
+
+.lmp-color {
+    color: #8BC21E;
+}
+
+.green {
+    color: #458746;
+}
+
+.red {
+    color: #B94846;
+}
+
+.blue {
+    color: #3986AC;
+}
+
+.yellow {
+    color: #F99406;
+}
+
+div.center, p.center, img.center {
+    margin-left: auto !important;
+    margin-right: auto !important;
+    float: none !important;
+    display: block;
+    text-align: center;
+}
+
+.login-box .input-prepend {
+    margin-bottom: 10px;
+}
+
+.login-box .btn {
+    margin-top: 15px;
+    width: 100%
+}
+
+.alert-lmp-info {
+    background-color: rgb(139,194,139);
+}

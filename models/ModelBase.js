@@ -9,10 +9,14 @@ function ModelBase() {
 }
 
 ModelBase.prototype.getOne = function(sql, cond, selector) {
+    return this.getAll(sql + ' LIMIT 1', cond, selector);
+};
+
+ModelBase.prototype.getAll = function(sql, cond, selector) {
     var pool = poolManager.getPool(this.rdb);
     sql = sql || '1<>2';
     selector = selector || '*';
-    sql = 'SELECT ' + selector + ' FROM ' + this.table + ' WHERE ' + sql + ' LIMIT 1';
+    sql = 'SELECT ' + selector + ' FROM ' + this.table + ' WHERE ' + sql;
     var defered = q.defer();
     pool.getConnection(function(err, connection){
         if (err) {
@@ -26,11 +30,32 @@ ModelBase.prototype.getOne = function(sql, cond, selector) {
                     defered.resolve(row);
                 }
                 connection.release();
-                pool.end();
+//                pool.end();
             });
         }
     });
     return defered.promise;
-}
+};
+
+ModelBase.prototype.create = function(data) {
+    var pool = poolManager.getPool(this.wdb);
+    var sql = 'INSERT INTO ' + this.table + ' SET ?';
+    var defered = q.defer();
+    pool.getConnection(function(err, connection){
+        if (err) {
+            defered.reject(err);
+        } else {
+            connection.query(sql, data, function(err, result){
+                if (err) {
+                    defered.reject(err);
+                } else {
+                    defered.resolve(result);
+                }
+                connection.release();
+            });
+        }
+    });
+    return defered.promise();
+};
 
 module.exports = ModelBase;
