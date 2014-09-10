@@ -9,7 +9,7 @@ var StaffModel = require(ROOT_PATH + '/models/StaffModel');
 router.get('/', function(req, res, next){
     try {
         console.log('login...');
-        res._view = 'index';
+        res._view = 'login/index';
         res.doc = {};
         res.doc.ref = req.params.ref || '/';
         res.render(res._view, res.doc);
@@ -36,8 +36,7 @@ router.post('/', function(req, res, next){
             ip : req.ip
         });
         var cookieOpt = {
-            path : '/',
-            domain : '.landmarkoa.com'
+            path : '/'
         };
         if (remember) {
             cookieOpt.maxAge = 30 * 24 * 60 * 60 * 1000;

@@ -28,7 +28,7 @@ function initControllers(dirName, viewDirName, trackPath) {
             var app = express();
             verbose && console.log('view dir: ' + viewDirName);
             verbose && console.log('trackPath: ' + trackPath);
-            app.set('views', viewDirName);
+//            app.set('views', viewDirName);
             app.use(trackPath, controller);
 //            app.use(trackPath, function(req, res, next){
 //                console.log('xxxxx');

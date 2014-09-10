@@ -7,7 +7,7 @@ require = {
     baseUrl : '/scripts',
     paths : {
         'jquery' : '/bower_components/jquery/dist/jquery.min',
-        'angular' : '/bower_components/angular/angular.min',
+        'angular' : '/bower_components/angular/angular',
         'bootstrap' : '/bower_components/bootstrap/dist/js/bootstrap.min',
         'text' : '/bower_components/requirejs-text/text',
         'domReady' : '/bower_components/requirejs-domready/domReady',
@@ -19,8 +19,8 @@ require = {
     },
     shim : {
         'angular' : {
-            'exports' : 'angular',
-            'deps' : ['jquery']
+            'exports' : 'angular'
+            //'deps' : ['jquery']
         },
         'angular-route' : ['angular'],
         'angular-resource' : ['angular'],

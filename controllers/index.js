@@ -6,12 +6,7 @@ var router = express.Router();
 
 router.get('/', function(req, res, next){
     console.log('index!!');
-    res._view = 'index';
-    res.doc = {
-        title : 'my app',
-        author : 'rick'
-    };
-    res.render(res._view, res.doc);
+    res.redirect('/staff/profile');
     res.end();
 });
 

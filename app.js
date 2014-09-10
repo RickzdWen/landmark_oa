@@ -11,6 +11,7 @@ global.DB_CONFIG_FILE = __dirname + '/configs/dbConfig';
 var app = express();
 
 // view engine setup
+app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 app.use(favicon());
@@ -30,7 +31,7 @@ require(path.join(ROOT_PATH, 'middlewares/route'))(app, {
 app.use(function(req, res, next) {
     var err = new Error('Not Found');
     err.status = 404;
-    next(err);
+    !res.doc && !res._view && next(err);
 });
 
 /// error handlers

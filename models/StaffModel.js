@@ -25,6 +25,16 @@ var StaffModel = declare([oaBase], {
             delay.reject(err);
         });
         return delay.promise;
+    },
+
+    getStaffById : function(id) {
+        var delay = q.defer();
+        this.getOne('id=?', [id], '*').then(function(row){
+            delay.resolve(row);
+        }, function(err){
+            delay.reject(err);
+        });
+        return delay.promise;
     }
 });
 

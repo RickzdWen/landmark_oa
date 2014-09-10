@@ -1,23 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Landmark OA</title>
-    <link rel='stylesheet' href='/bower_components/bootstrap/dist/css/bootstrap.min.css' />
+      <%- include common_head.ejs%>
     <link rel="stylesheet" href="/bower_components/bootstrap-datepicker/css/datepicker3.css" />
-    <link rel='stylesheet' href='/stylesheets/style.css' />
   </head>
   <body>
-    <div class="navbar navbar-default" role="navigation">
-        <a class="navbar-brand" href="#"><img class="logo" src="/images/logo.png"></a>
-        <ul class="nav navbar-nav">
-            <li><a href="#"><i class="glyphicon glyphicon-home"></i> 事务管理</a></li>
-            <li><a href="#"><i class="glyphicon glyphicon-shopping-cart"></i> 产品管理</a></li>
-            <li><a href="#"><i class="glyphicon glyphicon-usd"></i> 订单管理</a></li>
-            <li><a href="#"><i class="glyphicon glyphicon-user"></i> 客户管理</a></li>
-            <li><a href="#"><i class="glyphicon glyphicon-wrench"></i> 网站管理</a></li>
-            <li><a href="#"><i class="glyphicon glyphicon-stats"></i> 运营统计</a></li>
-        </ul>
-    </div>
+    <%- include common_header.ejs%>
     <div class="main-container">
         <div class="row">
             <div class="col-md-2 col-lg-2">

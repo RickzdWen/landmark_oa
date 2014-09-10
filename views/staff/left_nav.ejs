@@ -1,0 +1,10 @@
+<div class="col-md-2 col-lg-2">
+    <div class="left-nav-bar">
+        <ul class="nav nav-pills nav-stacked">
+            <li <%if(doc.nav=='todo'){%>class="active"<%}%>><a href="#">Todo Today</a></li>
+            <li <%if(doc.nav=='profile'){%>class="active"<%}%>><a href="/staff/profile">Profile</a></li>
+            <li <%if(doc.nav=='password'){%>class="active"<%}%>><a href="/staff/password">Password</a></li>
+            <li <%if(doc.nav=='members'){%>class="active"<%}%>><a href="#">Members</a></li>
+        </ul>
+    </div>
+</div>

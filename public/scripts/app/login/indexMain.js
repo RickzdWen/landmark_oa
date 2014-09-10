@@ -7,12 +7,13 @@ define([
     'angular',
     'angular-md5'
 ], function(doc, angular){
-    var module = angular.module('loginIndex', ['ngMd5']);
+    var module = angular.module('loginApp', ['angular-md5']);
     module.controller('loginCtrl', ['$scope', '$http', 'md5',
         function($scope, $http, md5) {
             var info = $scope.info = {
                 nick : '',
-                pwd : ''
+                pwd : '',
+                remember : true
             };
             $scope.errMsg = '';
 
@@ -25,9 +26,10 @@ define([
                 requesting = true;
                 $http.post('/login', {
                     nick : info.nick,
-                    pwd : md5.createHash(info.pwd)
+                    pwd : md5.createHash(info.pwd),
+                    remember : info.remember
                 }).success(function(ret){
-                    var ref = ret.ret || '/';
+                    var ref = ret.ref || '/';
                     window.location.href = ref;
                 }).error(function(error){
                     $scope.errMsg = error.message;
@@ -36,4 +38,5 @@ define([
                 });
             }
     }]);
+    angular.bootstrap(doc, ['loginApp']);
 });
