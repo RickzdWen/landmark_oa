@@ -7,7 +7,7 @@
 }
 
 .main-container {
-    margin: 0 10px;
+    margin: 0 10px 20px 10px;
 }
 
 .left-nav-bar {
@@ -107,4 +107,9 @@ div.center, p.center, img.center {
 
 .alert-lmp-info {
     background-color: rgb(139,194,139);
+}
+
+.footer {
+    border-top: 1px solid #8BC21E;
+    padding: 10px 30px 0 30px;
 }
