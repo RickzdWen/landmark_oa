@@ -1,0 +1,10 @@
+<div>
+    <button class="btn btn-upload" ng-bind="showTitle"></button>
+    <div>
+        <form method="post" enctype="multipart/form-data" encoding="multipart/form-data" target="{{iframeName}}" action="{{uploadUrl}}" name="upload">
+            <input type="file" accept="{{accept}}" name="{{fileInputName}}" autocomplete="off">
+            <input type="hidden" style="display: none;" ng-repeat="cInput in customizedInputs" name="cInput.name" value="cInput.value">
+        </form>
+        <iframe id="{{iframeName}}" name="{{iframeName}}" src="about:blank" style="display: none;"></iframe>
+    </div>
+</div>

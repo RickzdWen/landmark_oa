@@ -3,7 +3,7 @@
  */
 
 define([
-    'futu/_base/declare'
+    'landmark/declare'
 ], function(declare){
 
     function _Widget(props) {

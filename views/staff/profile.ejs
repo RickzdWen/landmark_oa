@@ -16,7 +16,7 @@
                 <div class="row profile-title">
                     <div class="col-sm-3 col-sm-offset-2 text-right">
                         <img src="/images/staff/default.jpeg" class="img-rounded user-icon" width="100" height="100">
-                        <div class="btn-upload-wrap"><button class="btn btn-upload">upload</button></div>
+                        <div class="btn-upload-wrap"><span lmp-file-upload data-upload-url="/staff/upload"></span></div>
                     </div>
                     <div class="col-sm-3 text-center staff-title">
                         <h1><%= doc.staff.nick%></h1>
@@ -100,5 +100,5 @@
 <%- include ../common_footer.ejs%>
 </body>
 <script type="text/javascript" src="/requirejs_config.js"></script>
-<script data-main="app/staff/indexMain" src="/bower_components/requirejs/require.js"></script>
+<script data-main="app/staff/profileMain" src="/bower_components/requirejs/require.js"></script>
 </html>
