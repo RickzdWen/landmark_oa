@@ -26,5 +26,12 @@ var profileCtrl = function(req, res, next){
 
 router.get('/', profileCtrl);
 router.get('/profile', profileCtrl);
+router.post('/upload', function(req, res, next){
+    res.doc = {
+        result : 0
+    };
+    res.json(res.doc);
+    res.end();
+});
 
 module.exports = router;
