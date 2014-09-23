@@ -1,5 +1,17 @@
+body {
+    overflow-x: hidden;
+}
+
 .bg-landmark {
     background-color: #8BC21E;
+}
+
+.login-container {
+    /*position: absolute;
+    top: 20%;
+    left: 30%;*/
+    margin-top: 10%;
+    width: 600px;
 }
 
 .navbar .logo {
