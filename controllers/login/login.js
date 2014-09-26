@@ -42,7 +42,6 @@ router.post('/', function(req, res, next){
             cookieOpt.maxAge = 30 * 24 * 60 * 60 * 1000;
         }
         res.cookie('auth', token, cookieOpt);
-        console.log('come on!');
         res.json({});
         res.end();
     }, function(err){

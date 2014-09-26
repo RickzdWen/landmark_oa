@@ -19,9 +19,6 @@ define([
             this.$fileInputNode = this.$formNode.find('input[type=file]');
             this.$node.append('<iframe name="' + this.scope.iframeName + '" src="about:blank" style="display:none;"></iframe>');
             this.iframeNode = this.$node.find('iframe')[0];
-//            this.$formNode.attr('target', this.scope.iframeName);
-//            $(this.iframeNode).prop('name', this.scope.iframeName);
-//            this.iframeNode.submitName = this.scope.iframeName;
         },
 
         postCreate : function() {
