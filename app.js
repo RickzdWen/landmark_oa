@@ -49,7 +49,6 @@ if (app.get('env') === 'development') {
             err.result || (err.result = 500);
             console.log(err);
             res.json(err);
-            res.end();
         }
     });
 }

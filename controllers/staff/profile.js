@@ -15,7 +15,6 @@ var profileCtrl = function(req, res, next){
     };
     StaffModel.getInstance().getStaffById(res.logon.id).then(function(row){
         row && (delete row.pwd);
-        console.log(row);
         res.doc.staff = row;
         res.render(res._view, res);
         res.end();
@@ -27,11 +26,14 @@ var profileCtrl = function(req, res, next){
 router.get('/', profileCtrl);
 router.get('/profile', profileCtrl);
 router.post('/upload', function(req, res, next){
-    res.doc = {
-        result : 0
-    };
-    res.json(res.doc);
-    res.end();
+    var uploadHandler = require(ROOT_PATH + '/libs/uploadHandler');
+    uploadHandler.handleImage({
+        targetPath : ROOT_PATH + '/public/images/'
+    }, req, res, function(){
+        res.json({});
+    }, function(){
+        res.json({result : 100});
+    });
 });
 
 module.exports = router;

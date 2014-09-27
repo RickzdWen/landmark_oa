@@ -30,6 +30,10 @@ define([
             }));
 
             this.$fileInputNode.change(lang.hitch(this, function(){
+                var value = this.$fileInputNode.val();
+                if (!value) {
+                    return;
+                }
                 var scope = this.scope;
                 scope.$apply(function(){
                     scope.uploading = true;

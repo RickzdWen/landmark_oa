@@ -17,6 +17,5 @@ exports.checkOaLogin = function () {
                 next();
             }
         }
-        next();
     };
 }

@@ -20,7 +20,6 @@ router.get('/', function(req, res, next){
 });
 
 router.post('/', function(req, res, next){
-    console.log('post...');
     var nick = req.body.nick;
     var pwd = req.body.pwd;
     var remember = req.body.remember;
