@@ -24,7 +24,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(require(path.join(ROOT_PATH, 'middlewares/loginChecker')).checkOaLogin());
 
 require(path.join(ROOT_PATH, 'middlewares/route'))(app, {
-    verbose : true
+    verbose : false
 });
 
 /// catch 404 and forward to error handler

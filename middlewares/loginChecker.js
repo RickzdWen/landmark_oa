@@ -16,6 +16,8 @@ exports.checkOaLogin = function () {
                 res.logon = info;
                 next();
             }
+        } else {
+            next();
         }
     };
 }

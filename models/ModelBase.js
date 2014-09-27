@@ -55,7 +55,7 @@ ModelBase.prototype.create = function(data) {
             });
         }
     });
-    return defered.promise();
+    return defered.promise;
 };
 
 module.exports = ModelBase;

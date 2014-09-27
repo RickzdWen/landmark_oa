@@ -42,7 +42,6 @@ router.post('/', function(req, res, next){
         }
         res.cookie('auth', token, cookieOpt);
         res.json({});
-        res.end();
     }, function(err){
         next(err);
     });
