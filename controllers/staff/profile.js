@@ -17,7 +17,6 @@ var profileCtrl = function(req, res, next){
         row && (delete row.pwd);
         res.doc.staff = row;
         res.render(res._view, res);
-        res.end();
     }, function(err){
         next(err);
     });
