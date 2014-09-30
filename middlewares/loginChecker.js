@@ -11,7 +11,6 @@ exports.checkOaLogin = function () {
             var info = token && manager.decodeLoginToken(token);
             if (!info) {
                 res.redirect('/login?ref=' + req.url);
-                res.end();
             } else {
                 res.logon = info;
                 next();
@@ -20,4 +19,4 @@ exports.checkOaLogin = function () {
             next();
         }
     };
-}
+};

@@ -11,8 +11,11 @@ require([
 ], function(doc, $, angular, params){
     var app = angular.module('profileApp', ['ui.upload']);
     app.run(['$rootScope', function ($rootScope) {
-        $rootScope.uploadInputs = {
-            category : 'staff'
+        $rootScope.version = '';
+        $rootScope.uploadCallBack = function(json){
+            if (json && json.code === 0) {
+                $rootScope.version = +new Date();
+            }
         };
     }]);
     angular.bootstrap(angular.element('.main-part')[0], ['profileApp']);

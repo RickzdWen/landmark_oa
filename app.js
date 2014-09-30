@@ -7,6 +7,11 @@ var bodyParser = require('body-parser');
 
 global.ROOT_PATH = __dirname;
 global.DB_CONFIG_FILE = __dirname + '/configs/dbConfig';
+if (/^win/.test(process.platform)) {
+    global.DATA_PATH = __dirname + '/../lm_data';
+} else {
+    global.DATA_PATH = '/lm_data';
+}
 
 var app = express();
 
@@ -40,7 +45,7 @@ app.use(function(req, res, next) {
 if (app.get('env') === 'development') {
     app.use(function(err, req, res, next) {
         !err.code && res.status(err.status || 500);
-        console.log(err.getStack && err.getStack());
+        console.log((err.getStack && err.getStack()) || err.stack);
         if (res._view) {
             res.render('error', {
                 message: err.getMessage(),

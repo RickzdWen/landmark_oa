@@ -47,10 +47,17 @@ define([
         listenIframeLoad : function() {
             var iframeNode = this.iframeNode;
             var scope = this.scope;
+            var self = this;
             function onLoadFunc() {
                 scope.$apply(function(){
                     scope.uploading = false;
-                    scope.uploadCallBack && scope.uploadCallBack(iframeNode.contentWindow);
+                    var json = null;
+                    var ibody = iframeNode.contentWindow.document.body;
+                    var node = ibody && ibody.firstChild && ibody.firstChild.firstChild;
+                    if (node && node.nodeType == 3) {
+                        json = $.parseJSON(node.parentNode.innerText);
+                    }
+                    scope.uploadCallBack && scope.uploadCallBack(json, self);
                 });
             }
             if (iframeNode.attachEvent) {

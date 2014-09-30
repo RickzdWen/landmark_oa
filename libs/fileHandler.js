@@ -3,23 +3,17 @@
  */
 
 var busboy = require('connect-busboy');
-var util = require('util');
 var uuid = require('node-uuid');
 var CommonError = require(ROOT_PATH + '/libs/errors/CommonError');
 
-function getExtension(fileName) {
-    var i = fileName.lastIndexOf('.');
-    return i < 0 ? '' : fileName.substr(i);
-}
-
 module.exports = {
-    handle : function(options, req, res, cb) {
+    handleUpload : function(options, req, res, cb) {
         options = options || {};
         options.immediate = true;
         busboy(options)(req, res, cb);
     },
 
-    handleImage : function(options, req, res, cb, errCb) {
+    handleImageUpload : function(options, req, res, cb) {
         var extend = require('extend');
         var fs = require('fs');
         var q = require('q');
@@ -32,7 +26,8 @@ module.exports = {
         var targetPath = options.targetPath;
         var targetName = options.targetName;
         extend(true, opts, options);
-        this.handle(opts, req, res, function(){
+        var self = this;
+        this.handleUpload(opts, req, res, function(){
             var delay = q.defer();
             var fields = {};
             var target = '';
@@ -44,12 +39,15 @@ module.exports = {
                     delay.reject(new CommonError('', 51001));
                     return;
                 }
-                var extension = getExtension(fileName);
-                !extension && (extension = '.' + extension);
+                extension = self.getExtension(fileName);
+                extension && (extension = '.' + extension);
                 var targetFileName = '';
-                !targetName && (targetFileName = fileName);
-                if (util.isFunction(targetName)) {
+                if (!targetName) {
+                    targetFileName = fileName
+                } else if (typeof targetName == 'function') {
                     targetFileName = uuid.v1() + extension;
+                } else {
+                    targetFileName = targetName + extension;
                 }
                 var fileDelay = q.defer();
                 file.on('end', function(){
@@ -63,7 +61,7 @@ module.exports = {
                         delay.resolve();
                     }, function(){
                         fs.unlink(target);
-                        delay.reject('', 51000);
+                        delay.reject(new CommonError('', 51000));
                     });
                 });
             });
@@ -74,15 +72,43 @@ module.exports = {
 
             req.busboy.on('finish', function(){
                 delay.promise.then(function(){
-                    if (util.isFunction(targetName)) {
+                    if (typeof targetName == 'function') {
                         var newName = targetName(fields);
-                        fs.rename(target, targetPath + '/' + newName + extension);
+                        fs.rename(target, targetPath + '/' + newName + extension, function(err){
+                            cb && cb(new CommonError(err), target, fields);
+                        });
+                    } else {
+                        cb && cb(null, target, fields);
                     }
-                    cb && cb(target, fields);
                 }, function(error){
-                    errCb && errCb(error);
+                    cb && cb(error);
                 });
             });
+        });
+    },
+
+    getExtension : function(fileName) {
+        var i = fileName.lastIndexOf('.');
+        return i < 0 ? '' : fileName.substr(i + 1);
+    },
+
+    handleImageDownload : function(options, req, res, cb) {
+        var fs = require('fs');
+        var target = options.target;
+        var extension = this.getExtension(target);
+        fs.lstat(target, function(err, stat){
+            if (err) {
+                cb && cb(new CommonError(err));
+            } else if (stat.isFile()) {
+                res.writeHead(200, {
+                    'Content-Type' : 'image/' + extension,
+                    'Cache-Control': 'max-age=10000000'
+                });
+                var readStream = fs.createReadStream(target);
+                readStream.pipe(res);
+            } else {
+                cb && cb(new CommonError('', 51003));
+            }
         });
     }
 };
