@@ -35,11 +35,11 @@
                         <div class="input-prepend">
                             <label class="remember" for="remember"><input type="checkbox" id="remember" ng-model="info.remember"> Remember me</label>
                         </div>
-                        <div class="pull-left has-error" ng-bind="errMsg"></div>
+                        <div class="pull-left text-danger" ng-bind="errMsg"></div>
                         <div class="clearfix"></div>
 
                         <p class="center col-md-5">
-                            <button class="btn btn-block btn-landmark" ng-class="{disabled:!info.nick||!info.pwd}" ng-click="login($event);">Login</button>
+                            <button class="btn btn-block btn-landmark" ng-click="login($event);">Login</button>
                         </p>
                     </fieldset>
                 </form>

@@ -5,6 +5,7 @@
 var declare = require(ROOT_PATH + '/libs/declare');
 var oaBase = require('./OaLandmarkBase');
 var q = require('q');
+var CommonError = require(ROOT_PATH + '/libs/errors/CommonError');
 
 var _instance = null;
 
@@ -17,8 +18,7 @@ var StaffModel = declare([oaBase], {
             if (row && row.pwd === pwd) {
                 delay.resolve(row);
             } else {
-                var err = new Error('Nick or Password not correct!');
-                err.code = 50001;
+                var err = new CommonError('Nick or Password not correct!', 50001);
                 delay.reject(err);
             }
         }, function(err){

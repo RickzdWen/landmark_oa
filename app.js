@@ -39,15 +39,14 @@ app.use(function(req, res, next) {
 // will print stacktrace
 if (app.get('env') === 'development') {
     app.use(function(err, req, res, next) {
-        res.status(err.status || 500);
+        !err.code && res.status(err.status || 500);
+        console.log(err.getStack && err.getStack());
         if (res._view) {
             res.render('error', {
-                message: err.message,
+                message: err.getMessage(),
                 error: err
             });
         } else {
-            err.result || (err.result = 500);
-            console.log(err);
             res.json(err);
         }
     });

@@ -14,6 +14,6 @@ var manager = {
         pools[db] = mysql.createPool(dbConfig[db]);
         return pools[db];
     }
-}
+};
 
 module.exports = manager;

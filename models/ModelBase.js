@@ -2,6 +2,7 @@
  * Created by zhangyun on 14-8-17.
  */
 var poolManager = require('./poolManager');
+var CommonError = require(ROOT_PATH + '/libs/errors/CommonError');
 var q = require('q');
 
 function ModelBase() {
@@ -20,11 +21,11 @@ ModelBase.prototype.getAll = function(sql, cond, selector) {
     var defered = q.defer();
     pool.getConnection(function(err, connection){
         if (err) {
-            defered.reject(err);
+            defered.reject(new CommonError(err));
         } else {
             connection.query(sql, cond, function(err, rows){
                 if (err) {
-                    defered.reject(err);
+                    defered.reject(new CommonError(err));
                 } else {
                     var row = rows && rows[0];
                     defered.resolve(row);
@@ -43,11 +44,11 @@ ModelBase.prototype.create = function(data) {
     var defered = q.defer();
     pool.getConnection(function(err, connection){
         if (err) {
-            defered.reject(err);
+            defered.reject(new CommonError(err));
         } else {
             connection.query(sql, data, function(err, result){
                 if (err) {
-                    defered.reject(err);
+                    defered.reject(new CommonError(err));
                 } else {
                     defered.resolve(result);
                 }

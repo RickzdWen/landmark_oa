@@ -5,6 +5,7 @@
 var express = require('express');
 var router = express.Router();
 var StaffModel = require(ROOT_PATH + '/models/StaffModel');
+var CommonError = require(ROOT_PATH + '/libs/errors/CommonError');
 
 router.get('/', function(req, res, next){
     try {
@@ -13,7 +14,6 @@ router.get('/', function(req, res, next){
         res.doc = {};
         res.doc.ref = req.params.ref || '/';
         res.render(res._view, res.doc);
-        res.end();
     } catch (e) {
         next(e);
     }
@@ -24,7 +24,8 @@ router.post('/', function(req, res, next){
     var pwd = req.body.pwd;
     var remember = req.body.remember;
     if (!nick || !pwd) {
-        throw new Error('Parameter Error!');
+        next(new CommonError('Parameter Error', 50002));
+        return;
     }
     var staff = StaffModel.getInstance();
     staff.getLoginInfo(nick, pwd).then(function(info){

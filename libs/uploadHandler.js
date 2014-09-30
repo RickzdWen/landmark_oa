@@ -3,6 +3,14 @@
  */
 
 var busboy = require('connect-busboy');
+var util = require('util');
+var uuid = require('node-uuid');
+var CommonError = require(ROOT_PATH + '/libs/errors/CommonError');
+
+function getExtension(fileName) {
+    var i = fileName.lastIndexOf('.');
+    return i < 0 ? '' : fileName.substr(i);
+}
 
 module.exports = {
     handle : function(options, req, res, cb) {
@@ -27,26 +35,35 @@ module.exports = {
         this.handle(opts, req, res, function(){
             var delay = q.defer();
             var fields = {};
+            var target = '';
+            var extension = '';
 
             req.busboy.on('file', function(fieldName, file, fileName, encoding, mimeType){
                 if (!/^image\//.test(mimeType)) {
                     file.resume();
-                    delay.reject();
+                    delay.reject(new CommonError('', 51001));
                     return;
                 }
-                !targetName && (targetName = fileName);
+                var extension = getExtension(fileName);
+                !extension && (extension = '.' + extension);
+                var targetFileName = '';
+                !targetName && (targetFileName = fileName);
+                if (util.isFunction(targetName)) {
+                    targetFileName = uuid.v1() + extension;
+                }
                 var fileDelay = q.defer();
                 file.on('end', function(){
                     file.truncated ? fileDelay.reject() : fileDelay.resolve();
                 });
-                var writeStream = fs.createWriteStream(targetPath + '/' + targetName);
+                target = targetPath + '/' + targetFileName;
+                var writeStream = fs.createWriteStream(target);
                 file.pipe(writeStream);
                 writeStream.on('close', function(){
                     fileDelay.promise.then(function(){
                         delay.resolve();
                     }, function(){
-                        fs.unlink(targetPath + '/' + targetName);
-                        delay.reject();
+                        fs.unlink(target);
+                        delay.reject('', 51000);
                     });
                 });
             });
@@ -57,11 +74,15 @@ module.exports = {
 
             req.busboy.on('finish', function(){
                 delay.promise.then(function(){
-                    cb && cb(targetPath + '/' + targetName, fields);
+                    if (util.isFunction(targetName)) {
+                        var newName = targetName(fields);
+                        fs.rename(target, targetPath + '/' + newName + extension);
+                    }
+                    cb && cb(target, fields);
                 }, function(error){
                     errCb && errCb(error);
-                })
+                });
             });
         });
     }
-}
+};
