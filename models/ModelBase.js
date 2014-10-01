@@ -59,4 +59,38 @@ ModelBase.prototype.create = function(data) {
     return defered.promise;
 };
 
+ModelBase.prototype.update = function(data, sql, cond) {
+    var pool = poolManager.getPool(this.wdb);
+    var defered = q.defer();
+    var setTmp = [];
+    var condTmp = [];
+    for (var k in data) {
+        setTmp.push(k + '=?');
+        condTmp.push(data[k]);
+    }
+    if (!setTmp.length) {
+        defered.reject(new CommonError('', 50002));
+    } else {
+        sql = sql || '1<>2';
+        sql = 'UPDATE ' + this.table + ' SET ' + setTmp.join(',') + ' WHERE ' + sql;
+        pool.getConnection(function(err, connection){
+            if (err) {
+                defered.reject(new CommonError(err));
+            } else {
+                cond = cond || [];
+//                connection.query('SET NAMES utf8', [], function(){});
+                connection.query(sql, condTmp.concat(cond), function(err, result){
+                    if (err) {
+                        defered.reject(new CommonError(err));
+                    } else {
+                        defered.resolve(result);
+                    }
+                    connection.release();
+                });
+            }
+        });
+    }
+    return defered.promise;
+};
+
 module.exports = ModelBase;

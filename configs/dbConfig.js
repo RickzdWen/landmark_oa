@@ -9,7 +9,8 @@ module.exports = {
         database : 'oa_landmark',
         user : 'rickca',
         password : 'dong8888',
-        connectionLimit : 10
+        connectionLimit : 10,
+        charset : 'UTF8_GENERAL_CI'
     },
 
     oa_landmark_w : {
@@ -18,6 +19,7 @@ module.exports = {
         database : 'oa_landmark',
         user : 'rickca',
         password : 'dong8888',
-        connectionLimit : 10
+        connectionLimit : 10,
+        charset : 'UTF8_GENERAL_CI'
     }
 };

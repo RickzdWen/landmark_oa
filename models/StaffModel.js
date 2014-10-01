@@ -28,9 +28,20 @@ var StaffModel = declare([oaBase], {
     },
 
     getStaffById : function(id) {
+        return this.getOne('id=?', [id]);
+    },
+
+    checkExist : function(name , value, sid) {
+        return this.getOne(name + '=? AND id!=?', [value, sid], '*');
+    },
+
+    updateIconVersion : function(id) {
         var delay = q.defer();
-        this.getOne('id=?', [id], '*').then(function(row){
-            delay.resolve(row);
+        var newVersion = +new Date();
+        this.update({
+            'icon_version' : newVersion
+        }, 'id=?', [id]).then(function(){
+            delay.resolve(newVersion);
         }, function(err){
             delay.reject(err);
         });

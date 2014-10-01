@@ -17,6 +17,7 @@ var profileCtrl = function(req, res, next){
     StaffModel.getInstance().getStaffById(res.logon.id).then(function(row){
         row && (delete row.pwd);
         res.doc.staff = row;
+        res.doc.staffJson = JSON.stringify(row);
         res.render(res._view, res);
     }, function(err){
         next(err);
@@ -50,7 +51,14 @@ router.post('/upload', function(req, res, next){
                     if (err) {
                         next(err);
                     } else {
-                        res.json({code:0});
+                        StaffModel.getInstance().updateIconVersion(sid).then(function(version){
+                            res.json({
+                                code : 0,
+                                icon_version : version
+                            });
+                        }, function(err){
+                            next(err);
+                        });
                     }
                 });
             }
@@ -85,5 +93,60 @@ router.get('/icon', function(req, res, next){
         next(err);
     }
 });
+
+/**
+ * 校验昵称唯一
+ */
+router.get('/exist', function(req, res, next){
+    try {
+        var sid = res.logon.id;
+        var nick = req.query.nick;
+        if (!nick || !sid) {
+            throw new CommonError('', 50002);
+        }
+        StaffModel.getInstance().checkExist('nick', nick, sid).then(function(staff){
+            var exist = 0;
+            if (staff) {
+                exist = 1;
+            }
+            res.json({exist:exist});
+        }, function(err){
+            next(err);
+        });
+    } catch (err) {
+        next(err);
+    }
+});
+
+router.post('/update', function(req, res, next){
+    try {
+        var sid = res.logon.id;
+        var staff = _createStaff(req);
+        if (!sid || !staff.nick) {
+            throw new CommonError('', 50002);
+        }
+        StaffModel.getInstance().update(staff, 'id=?', [sid]).then(function(){
+            res.json({code:0});
+        }, function(err){
+            next(err);
+        });
+    } catch (err) {
+        next(err);
+    }
+});
+
+function _createStaff(req) {
+    var staff = {};
+    staff.nick = req.body.nick || '';
+    staff.nick_cn = req.body.nick_cn || '';
+    staff.qq = req.body.qq || '';
+    staff.email = req.body.email || '';
+    staff.birth = req.body.birth || '';
+    staff.sex = req.body.sex || 0;
+    staff.address = req.body.address || '';
+    staff.descp = req.body.descp || '';
+    staff.phone = req.body.phone || '';
+    return staff;
+}
 
 module.exports = router;

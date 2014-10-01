@@ -8,7 +8,7 @@ var errorConfig = require(ROOT_PATH + '/configs/errorConfig');
 function CommonError(msg, code, constr) {
     if (util.isError(msg)) {
         this.innerError = msg;
-        msg = msg.message;
+        msg = msg.message || msg.code;
     }
     Error.captureStackTrace(this, constr || this);
     this.code = code;
@@ -24,6 +24,6 @@ CommonError.prototype.getMessage = function() {
 
 CommonError.prototype.getStack = function() {
     return this.innerError ? this.innerError.stack : this.stack;
-}
+};
 
 module.exports = CommonError;

@@ -6,7 +6,7 @@
 </head>
 <body>
 <%- include ../common_header.ejs%>
-<div class="main-container">
+<div class="main-container" ng-controller="mainCtrl">
     <div class="row">
         <%- include left_nav.ejs%>
         <div class="col-md-10 col-lg-10">
@@ -15,7 +15,7 @@
                 <div class="divider"></div>
                 <div class="row profile-title">
                     <div class="col-sm-3 col-sm-offset-2 text-right">
-                        <img ng-src="/staff/icon?v={{version}}" class="img-rounded user-icon" width="100" height="100">
+                        <img ng-src="/staff/icon?v={{staff.icon_version}}" class="img-rounded user-icon" width="100" height="100">
                         <div class="btn-upload-wrap"><span lmp-file-upload data-upload-url="/staff/upload" data-upload-call-back="uploadCallBack"></span>
                         </div>
                     </div>
@@ -29,29 +29,29 @@
                     <div class="form-group">
                         <label for="nick" class="col-sm-3 control-label">Nick:</label>
                         <div class="col-sm-6">
-                            <input type="text" id="nick" class="form-control" placeholder="please input your nick" required>
+                            <input type="text" id="nick" ng-model="staff.nick" class="form-control" placeholder="please input your nick" required>
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="email" class="col-sm-3 control-label">Email:</label>
                         <div class="col-sm-6">
-                            <input type="email" id="email" class="form-control" placeholder="please input your email">
+                            <input type="email" id="email" ng-model="staff.email" class="form-control" placeholder="please input your email">
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="nick_cn" class="col-sm-3 control-label">Chinese Name:</label>
                         <div class="col-sm-6">
-                            <input type="text" id="nick_cn" class="form-control" placeholder="please input your chinese name">
+                            <input type="text" id="nick_cn" ng-model="staff.nick_cn" class="form-control" placeholder="please input your chinese name">
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-sm-3 control-label">Sex:</label>
                         <div class="col-sm-6">
                             <div class="radio-inline">
-                                <label><input type="radio" name="sex" value="0" checked>Male</label>
+                                <label><input type="radio" name="sex" value="0" ng-model="staff.sex" checked>Male</label>
                             </div>
                             <div class="radio-inline">
-                                <label><input type="radio" name="sex" value="1">Female</label>
+                                <label><input type="radio" name="sex" value="1" ng-model="staff.sex">Female</label>
                             </div>
                         </div>
                     </div>
@@ -59,7 +59,7 @@
                         <label for="birth" class="col-sm-3 control-label">Birthday:</label>
                         <div class="col-sm-6">
                             <div class="input-group date">
-                                <input type="text" id="birth" class="form-control"><span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
+                                <input type="text" id="birth" class="form-control" ng-model="staff.birth"><span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
                             </div>
                             <!--<input type="date" id="birth" class="form-control">-->
                         </div>
@@ -67,30 +67,30 @@
                     <div class="form-group">
                         <label for="phone" class="col-sm-3 control-label">Phone:</label>
                         <div class="col-sm-6">
-                            <input type="tel" id="phone" class="form-control" placeholder="cellphone number">
+                            <input type="tel" id="phone" ng-model="staff.phone" class="form-control" placeholder="cellphone number">
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="qq" class="col-sm-3 control-label">QQ:</label>
                         <div class="col-sm-6">
-                            <input type="text" id="qq" class="form-control" placeholder="qq number">
+                            <input type="text" id="qq" ng-model="staff.qq" class="form-control" placeholder="qq number">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="address" class="col-sm-3 control-label">Adress:</label>
+                        <label for="address" class="col-sm-3 control-label">Address:</label>
                         <div class="col-sm-6">
-                            <input type="text" id="address" class="form-control" placeholder="your address">
+                            <input type="text" id="address" ng-model="staff.address" class="form-control" placeholder="your address">
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="desc" class="col-sm-3 control-label">Description:</label>
                         <div class="col-sm-6">
-                            <textarea id="desc" rows="4" class="form-control" placeholder="write something to describe you ^_^"></textarea>
+                            <textarea id="desc" ng-model="staff.descp" rows="4" class="form-control" placeholder="write something to describe you ^_^"></textarea>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-sm-2 col-sm-offset-7">
-                            <button class="btn btn-landmark btn-block">Save</button>
+                            <button class="btn btn-landmark btn-block" ng-click="update($event);">Save</button>
                         </div>
                     </div>
                 </form>
@@ -100,6 +100,10 @@
 </div>
 <%- include ../common_footer.ejs%>
 </body>
+<script>
+    var _params = {};
+    _params.staff = <%- doc.staffJson%>;
+</script>
 <script type="text/javascript" src="/requirejs_config.js"></script>
 <script data-main="app/staff/profileMain" src="/bower_components/requirejs/require.js"></script>
 </html>

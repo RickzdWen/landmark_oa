@@ -9,7 +9,6 @@ var CommonError = require(ROOT_PATH + '/libs/errors/CommonError');
 
 router.get('/', function(req, res, next){
     try {
-        console.log('login...');
         res._view = 'login/index';
         res.doc = {};
         res.doc.ref = req.params.ref || '/';

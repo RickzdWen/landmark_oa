@@ -19,8 +19,8 @@ require = {
     },
     shim : {
         'angular' : {
-            'exports' : 'angular'
-            //'deps' : ['jquery']
+            'exports' : 'angular',
+            'deps' : ['jquery']
         },
         'angular-route' : ['angular'],
         'angular-resource' : ['angular'],
