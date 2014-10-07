@@ -10,12 +10,20 @@ function ModelBase() {
 }
 
 ModelBase.prototype.getOne = function(sql, cond, selector) {
-    return this.getAll(sql + ' LIMIT 1', cond, selector);
+    var defered = q.defer();
+    this.getAll(sql + ' LIMIT 1', cond, selector).then(function(rows){
+        var row = rows && rows[0];
+        defered.resolve(row);
+    }, function(err){
+        defered.reject(err);
+    });
+    return defered.promise;
 };
 
 ModelBase.prototype.getAll = function(sql, cond, selector) {
     var pool = poolManager.getPool(this.rdb);
     sql = sql || '1<>2';
+    cond = cond || [];
     selector = selector || '*';
     sql = 'SELECT ' + selector + ' FROM ' + this.table + ' WHERE ' + sql;
     var defered = q.defer();
@@ -27,8 +35,7 @@ ModelBase.prototype.getAll = function(sql, cond, selector) {
                 if (err) {
                     defered.reject(new CommonError(err));
                 } else {
-                    var row = rows && rows[0];
-                    defered.resolve(row);
+                    defered.resolve(rows);
                 }
                 connection.release();
 //                pool.end();

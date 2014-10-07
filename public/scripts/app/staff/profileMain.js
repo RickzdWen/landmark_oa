@@ -7,9 +7,10 @@ require([
     'angular',
     'app/common/params',
     'ui/upload/directives/fileUpload',
+    'ui/form/directives/datepicker',
     'landmark/angularjs/commonService'
 ], function(doc, angular, params){
-    var app = angular.module('profileApp', ['ui.upload', 'lm.commonService']);
+    var app = angular.module('profileApp', ['ui.upload', 'lm.commonService', 'ui.form']);
 
     app.controller('mainCtrl', ['$scope', '_getService', '$http',
         function($scope, _getService, $http){
@@ -26,9 +27,11 @@ require([
                 isEmailValid : false,
                 isQqValid : false
             };
+            $scope.nickError = '';
             $scope.$watch('staff.nick', function(nick){
                 vInfo.isNickUnique = false;
-                vInfo.isNickValid = nick !== '' ? true : false;
+                vInfo.isNickValid = nick ? true : false;
+                $scope.nickError = vInfo.isNickValid ? '' : 'nick is required';
             });
             $scope.$watch('staff.email', function(email){
                 if (email && !/^(?:[a-z\d]+[_\-\+\.]?)*[a-z\d]+@(?:([a-z\d]+\-?)*[a-z\d]+\.)+([a-z]{2,})+$/i.test(email)) {
@@ -45,6 +48,23 @@ require([
                 }
             });
 
+            $scope.validNick = function(withSubmit) {
+                if (vInfo.isNickValid) {
+                    _getService($http.get('/staff/exist', {
+                        params : {
+                            nick : staff.nick
+                        }
+                    })).then(function(res){
+                        if (res.exist) {
+                            $scope.nickError = 'the nick has been existed';
+                        } else {
+                            vInfo.isNickUnique = true;
+                            withSubmit && submit();
+                        }
+                    });
+                }
+            };
+
             var submiting = false;
             $scope.update = function(e) {
                 e.preventDefault();
@@ -53,18 +73,7 @@ require([
                 }
                 if (vInfo.isNickValid && vInfo.isEmailValid && vInfo.isQqValid) {
                     if (!vInfo.isNickUnique) {
-                        _getService($http.get('/staff/exist', {
-                            params : {
-                                nick : staff.nick
-                            }
-                        })).then(function(res){
-                            if (res.exist) {
-                                alert('the nick already exists!');
-                            } else {
-                                vInfo.isNickUnique = true;
-                                submit();
-                            }
-                        });
+                        $scope.validNick(true);
                     } else {
                         submit();
                     }

@@ -71,9 +71,9 @@ router.post('/upload', function(req, res, next){
 /**
  * 下载个人头像
  */
-router.get('/icon', function(req, res, next){
+router.get('/icon/:sid', function(req, res, next){
     try {
-        var sid = res.logon.id;
+        var sid = req.params.sid;
         var fileHandler = require(ROOT_PATH + '/libs/fileHandler');
         var commonConfig = require(ROOT_PATH + '/configs/commonConfig');
         var fs = require('fs');
@@ -101,7 +101,9 @@ router.get('/exist', function(req, res, next){
     try {
         var sid = res.logon.id;
         var nick = req.query.nick;
-        if (!nick || !sid) {
+        if (!sid) {
+            throw new CommonError('', 50000);
+        } else if (!nick) {
             throw new CommonError('', 50002);
         }
         StaffModel.getInstance().checkExist('nick', nick, sid).then(function(staff){
@@ -127,6 +129,20 @@ router.post('/update', function(req, res, next){
         }
         StaffModel.getInstance().update(staff, 'id=?', [sid]).then(function(){
             res.json({code:0});
+        }, function(err){
+            next(err);
+        });
+    } catch (err) {
+        next(err);
+    }
+});
+
+router.get('/members', function(req, res, next){
+    try {
+        StaffModel.getInstance().getAll('', [], 'id,nick,nick_cn').then(function(rows){
+            res._view = 'staff/members';
+            res.doc.members = rows;
+            res.render(res._view, res);
         }, function(err){
             next(err);
         });
