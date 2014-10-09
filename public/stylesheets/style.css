@@ -125,3 +125,20 @@ div.center, p.center, img.center {
     border-top: 1px solid #8BC21E;
     padding: 10px 30px 0 30px;
 }
+
+.staff-list ul {
+    list-style: none;
+}
+
+.staff-list ul li {
+    width: 200px;
+    height: 300px;
+    float: left;
+    margin-right: 10px;
+}
+
+.staff-list .staff-title {
+    text-align: center;
+    font-weight: bold;
+    font-size: 200%;
+}

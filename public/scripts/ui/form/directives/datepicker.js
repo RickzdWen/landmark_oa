@@ -11,8 +11,18 @@ define([
             restrict : 'EA',
             require : 'ngModel',
             link : function(scope, elem, attr, ngModel) {
-                elem.datepicker().on('changeDate', function(){
-                    scope.$digest();
+                var listener = scope.$watch(function(){
+                    return ngModel.$modelValue;
+                }, function(modelValue){
+                    console.log(modelValue);
+                    elem.datepicker('update');
+                    listener();
+                    elem.on('changeDate', function(){
+                        scope.$digest();
+                    });
+                });
+                elem.datepicker({
+                    autoclose : true
                 });
             }
         };

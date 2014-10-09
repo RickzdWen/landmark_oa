@@ -141,11 +141,35 @@ router.get('/members', function(req, res, next){
     try {
         StaffModel.getInstance().getAll('', [], 'id,nick,nick_cn').then(function(rows){
             res._view = 'staff/members';
-            res.doc.members = rows;
+            res.doc = {
+                members : rows,
+                category : 'staff',
+                nav : 'members',
+                title : 'Staff Members'
+            };
             res.render(res._view, res);
         }, function(err){
             next(err);
         });
+    } catch (err) {
+        next(err);
+    }
+});
+
+router.get('/member/:sid', function(req, res, next){
+    try {
+        StaffModel.getInstance().getStaffById(req.params.sid).then(function(staff){
+            res._view = 'staff/member';
+            res.doc = {
+                category : 'staff',
+                nav : 'members',
+                title : 'Staff Members',
+                staff : staff
+            };
+            res.render(res._view, res);
+        }, function(err){
+            next(err);
+        })
     } catch (err) {
         next(err);
     }
