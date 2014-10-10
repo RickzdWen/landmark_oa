@@ -11,19 +11,7 @@
         <%- include left_nav.ejs%>
         <div class="col-md-10 col-lg-10">
             <div class="main-part">
-                <div class="h2">Profile</div>
-                <div class="divider"></div>
-                <div class="row profile-title">
-                    <div class="col-sm-3 col-sm-offset-2 text-right">
-                        <img ng-src="/staff/icon/<%=doc.staff.id%>?v={{staff.icon_version}}" class="img-rounded user-icon" width="100" height="100">
-                        <div class="btn-upload-wrap"><span lmp-file-upload data-upload-url="/staff/upload" data-upload-call-back="uploadCallBack"></span>
-                        </div>
-                    </div>
-                    <div class="col-sm-3 text-center staff-title">
-                        <h1><%= doc.staff.nick%></h1>
-                        <h5>NO.<%= doc.staff.id%></h5>
-                    </div>
-                </div>
+                <div class="h2">Add New Member</div>
                 <div class="divider"></div>
                 <form class="form-horizontal" role="form">
                     <div class="form-group" ng-class="{'has-error':showNickError&&nickError}">
@@ -93,7 +81,7 @@
                     </div>
                     <div class="row">
                         <div class="col-sm-2 col-sm-offset-7">
-                            <button class="btn btn-landmark btn-block" ng-click="submit($event);">Save</button>
+                            <button class="btn btn-landmark btn-block" ng-click="update($event);">Save</button>
                         </div>
                     </div>
                 </form>
@@ -120,10 +108,6 @@
 </div>-->
 <%- include ../common_footer.ejs%>
 </body>
-<script>
-    var _params = {};
-    _params.staff = <%- doc.staffJson%>;
-</script>
 <script type="text/javascript" src="/requirejs_config.js"></script>
 <script data-main="app/staff/profileMain" src="/bower_components/requirejs/require.js"></script>
 </html>

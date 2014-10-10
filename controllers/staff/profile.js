@@ -163,10 +163,40 @@ router.get('/member/:sid', function(req, res, next){
             res.doc = {
                 category : 'staff',
                 nav : 'members',
-                title : 'Staff Members',
+                title : 'Staff Member',
                 staff : staff
             };
             res.render(res._view, res);
+        }, function(err){
+            next(err);
+        })
+    } catch (err) {
+        next(err);
+    }
+});
+
+router.get('/add', function(req, res, next){
+    try {
+        res._view = 'staff/add';
+        res.doc = {
+            category : 'staff',
+            nav : 'members',
+            title : 'Add New Member'
+        };
+        res.render(res._view, res);
+    } catch (err) {
+        next(err);
+    }
+});
+
+router.post('/add', function(req, res, next){
+    try {
+        var staff = _createStaff(req);
+        if (!staff.nick) {
+            throw new CommonError('', 50002);
+        }
+        StaffModel.getInstance().create(staff).then(function(result){
+            res.json({code : 0});
         }, function(err){
             next(err);
         })

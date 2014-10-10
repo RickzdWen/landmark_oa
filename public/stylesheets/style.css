@@ -142,3 +142,7 @@ div.center, p.center, img.center {
     font-weight: bold;
     font-size: 200%;
 }
+
+.form-display {
+    padding: 7px;
+}
