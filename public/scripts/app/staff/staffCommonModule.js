@@ -39,7 +39,7 @@ define(function(){
                             nick : staff.nick
                         }
                     })).then(function(res){
-                        if (res.exist) {
+                        if (res.staff && res.staff.id != staff.id) {
                             $scope.nickError = 'the nick has been existed';
                         } else {
                             vInfo.isNickUnique = true;
@@ -49,10 +49,10 @@ define(function(){
                 }
             };
 
-            var submiting = false;
+            $scope.submiting = false;
             $scope.submit = function(e) {
                 e.preventDefault();
-                if (submiting) {
+                if ($scope.submiting) {
                     return;
                 }
                 if (vInfo.isNickValid && vInfo.isEmailValid && vInfo.isQqValid) {

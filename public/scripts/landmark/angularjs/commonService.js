@@ -16,8 +16,9 @@ define([
                 } else {
                     delay.reject(ret.message);
                 }
-            }).error(function(){
-                delay.reject('Network Error');
+            }).error(function(error){
+                var msg = (error && error.message) || 'Network Error';
+                delay.reject(msg);
             });
             return delay.promise;
         };

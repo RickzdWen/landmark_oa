@@ -1,11 +1,15 @@
 <div class="navbar navbar-default" role="navigation">
-    <a class="navbar-brand" href="#"><img class="logo" src="/images/logo.png"></a>
+    <a class="navbar-brand nav-logo" href="#"><img class="logo" src="/images/logo.png"></a>
     <ul class="nav navbar-nav">
         <li <%if(doc.category=='staff'){%>class="active"<%}%>><a href="/staff"><i class="glyphicon glyphicon-home"></i> Staff Home</a></li>
-        <li <%if(doc.category=='pm'){%>class="active"<%}%>><a href="/pm"><i class="glyphicon glyphicon-shopping-cart"></i> Product Manage</a></li>
-        <li <%if(doc.category=='om'){%>class="active"<%}%>><a href="/om"><i class="glyphicon glyphicon-usd"></i> Order Manage</a></li>
-        <li <%if(doc.category=='cm'){%>class="active"<%}%>><a href="/cm"><i class="glyphicon glyphicon-user"></i> Customer Manage</a></li>
-        <li <%if(doc.category=='wm'){%>class="active"<%}%>><a href="/wm"><i class="glyphicon glyphicon-wrench"></i> Website Manage</a></li>
+        <li <%if(doc.category=='pm'){%>class="active"<%}%>><a href="/pm"><i class="glyphicon glyphicon-shopping-cart"></i> Product Management</a></li>
+        <li <%if(doc.category=='om'){%>class="active"<%}%>><a href="/om"><i class="glyphicon glyphicon-usd"></i> Order Management</a></li>
+        <li <%if(doc.category=='cm'){%>class="active"<%}%>><a href="/cm"><i class="glyphicon glyphicon-user"></i> Customer Management</a></li>
+        <li <%if(doc.category=='wm'){%>class="active"<%}%>><a href="/wm"><i class="glyphicon glyphicon-wrench"></i> Website Management</a></li>
+        <li <%if(doc.category=='report'){%>class="active"<%}%>><a href="/report"><i class="glyphicon glyphicon-list-alt"></i> Report</a></li>
         <li <%if(doc.category=='statistic'){%>class="active"<%}%>><a href="/stat"><i class="glyphicon glyphicon-stats"></i> Statistic</a></li>
+    </ul>
+    <ul class="nav navbar-nav pull-right">
+        <li><a href="/common/logout" title="logout"><i class="glyphicon glyphicon-off"></i></a></li>
     </ul>
 </div>

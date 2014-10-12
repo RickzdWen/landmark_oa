@@ -31,12 +31,10 @@ ModelBase.prototype.getAll = function(sql, cond, selector) {
         if (err) {
             defered.reject(new CommonError(err));
         } else {
-            console.log(sql);
             connection.query(sql, cond, function(err, rows){
                 if (err) {
                     defered.reject(new CommonError(err));
                 } else {
-                    console.log(rows);
                     defered.resolve(rows);
                 }
                 connection.release();

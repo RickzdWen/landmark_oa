@@ -106,12 +106,10 @@ router.get('/exist', function(req, res, next){
         } else if (!nick) {
             throw new CommonError('', 50002);
         }
-        StaffModel.getInstance().checkExist('nick', nick, sid).then(function(staff){
-            var exist = 0;
-            if (staff) {
-                exist = 1;
-            }
-            res.json({exist:exist});
+        StaffModel.getInstance().getOne('nick=?', [nick]).then(function(staff){
+            res.json({
+                staff : staff
+            });
         }, function(err){
             next(err);
         });
@@ -191,16 +189,80 @@ router.get('/add', function(req, res, next){
 
 router.post('/add', function(req, res, next){
     try {
+        res.doc = {};
+        var sid = res.logon.id;
+        if (!sid){
+            throw new CommonError('', 50000);
+        }
         var staff = _createStaff(req);
         if (!staff.nick) {
             throw new CommonError('', 50002);
         }
+        var crypto = require('crypto');
+        var hash = crypto.createHash('md5');
+        hash.update('123456');
+        staff.pwd = hash.digest('hex');
         StaffModel.getInstance().create(staff).then(function(result){
             res.json({code : 0});
         }, function(err){
             next(err);
         })
     } catch (err) {
+        next(err);
+    }
+});
+
+router.get('/password', function(req, res, next){
+    try {
+        res._view = 'staff/password';
+        res.doc = {
+            category : 'staff',
+            nav : 'password',
+            title : 'Change Password'
+        };
+        res.render(res._view, res);
+    } catch (err) {
+        next(err);
+    }
+});
+
+router.post('/password', function(req, res, next){
+    try {
+        res.doc = {code : 0};
+        var sid = res.logon.id;
+        if (!sid){
+            throw new CommonError('', 50000);
+        }
+        var oldPwd = req.body.oldPwd;
+        var newPwd = req.body.newPwd;
+        var pwdAgain = req.body.pwdAgain;
+        if (!oldPwd || !newPwd || !pwdAgain) {
+            throw new CommonError('', 50002);
+        }
+        if (newPwd != pwdAgain) {
+            throw new CommonError('passwords are not the same');
+        }
+        StaffModel.getInstance().getStaffById(sid).then(function(staff){
+            if (!staff) {
+                next(new CommonError('', 50003));
+            }
+            console.log(staff);
+            if (oldPwd == staff.pwd) {
+                StaffModel.getInstance().update({
+                    pwd : newPwd
+                }, 'id=?', [sid]).then(function(){
+                    res.json(res.doc);
+                }, function(err){
+                    next(err);
+                });
+            } else {
+                next(new CommonError('the old password not correct'));
+            }
+        }, function(err){
+            next(err);
+        });
+    } catch (err) {
+        console.log('catch');
         next(err);
     }
 });

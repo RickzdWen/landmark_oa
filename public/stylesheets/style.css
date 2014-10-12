@@ -13,7 +13,9 @@ body {
     margin-top: 10%;
     width: 600px;
 }
-
+.nav-logo {
+    padding: 2px 20px;
+}
 .navbar .logo {
     height: 100%;
 }

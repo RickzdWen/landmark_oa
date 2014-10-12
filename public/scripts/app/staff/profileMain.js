@@ -25,13 +25,13 @@ require([
             common.process($scope, $http, staff, _getService, _submit);
 
             function _submit() {
-                submiting = true;
+                $scope.submiting = true;
                 _getService($http.post('/staff/update', staff)).then(function(ret){
                     window.location.href = '/staff/member/' + staff.id;
                 }, function(error){
                     alert(error);
                 })['finally'](function(){
-                    submiting = false;
+                    $scope.submiting = false;
                 });
             }
     }]);

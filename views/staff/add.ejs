@@ -49,7 +49,7 @@
                         <label for="birth" class="col-sm-3 control-label">Birthday:</label>
                         <div class="col-sm-6">
                             <div class="input-group date">
-                                <input type="text" id="birth" class="form-control" lm-date-picker ng-model="staff.birth"><span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
+                                <input type="text" id="birth" class="form-control" lm-date-picker ng-model="staff.birth"><span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
                             </div>
                             <!--<input type="date" id="birth" class="form-control">-->
                         </div>
@@ -81,7 +81,7 @@
                     </div>
                     <div class="row">
                         <div class="col-sm-2 col-sm-offset-7">
-                            <button class="btn btn-landmark btn-block" ng-click="update($event);">Save</button>
+                            <button class="btn btn-landmark btn-block" ng-click="submit($event);">Save</button>
                         </div>
                     </div>
                 </form>
@@ -109,5 +109,5 @@
 <%- include ../common_footer.ejs%>
 </body>
 <script type="text/javascript" src="/requirejs_config.js"></script>
-<script data-main="app/staff/profileMain" src="/bower_components/requirejs/require.js"></script>
+<script data-main="app/staff/addMain" src="/bower_components/requirejs/require.js"></script>
 </html>
