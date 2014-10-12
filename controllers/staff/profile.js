@@ -37,12 +37,16 @@ router.post('/upload', function(req, res, next){
         var fs = require('fs');
         var sid = res.logon.id;
         var targetPath = commonConfig.STAFF_IMG_PATH + '/' + sid;
+        var exists = fs.existsSync(targetPath);
+        if (!exists) {
+            fs.mkdirSync(targetPath);
+        }
         fs.lstat(targetPath, function(err, stats){
             if (err) {
                 next(new CommonError(err));
             } else {
                 if (!stats.isDirectory()) {
-                    fs.mkdirSync(targetPath);
+                    next(new CommonError('', 51004));
                 }
                 fileHandler.handleImageUpload({
                     targetPath : targetPath,

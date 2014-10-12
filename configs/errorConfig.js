@@ -12,6 +12,7 @@ module.exports = {
     51001 : 'Type of file error',
     51002 : 'Uploaded file too large',
     51003 : 'File not exists',
+    51004 : 'Not a directory',
 
     60000 : 'System error'
 };

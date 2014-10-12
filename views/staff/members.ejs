@@ -17,7 +17,7 @@
                     <ul>
                         <% doc.members.forEach(function(member){%>
                             <li>
-                                <a href="/staff/member/<%= member.id%>"><img src="/staff/icon/<%= member.id%>" width="200px" height="200px" title="<%= member.id%> <%= member.nick_cn%>"></a>
+                                <a href="/staff/member/<%= member.id%>"><img src="/staff/icon/<%= member.id%>?v=<%=member.icon_version%>" width="200px" height="200px" title="<%= member.id%> <%= member.nick_cn%>"></a>
                                 <div class="staff-title"><%= member.nick%></div>
                             </li>
                         <%});%>
