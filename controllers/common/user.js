@@ -7,12 +7,14 @@ var router = express.Router();
 
 router.get('/logout', function(req, res, next){
     try {
-        res.doc = {};
+        res.doc = {code : 0};
         res.clearCookie('auth', {
             path : '/'
         });
         if (req.query.of != 'json') {
             res.redirect('/');
+        } else {
+            res.json(res.doc);
         }
     } catch (err) {
         next(err);
