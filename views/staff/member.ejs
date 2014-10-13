@@ -15,7 +15,7 @@
                 <div class="divider"></div>
                 <div class="row profile-title">
                     <div class="col-sm-3 col-sm-offset-2 text-right">
-                        <img src="/staff/icon/<%=doc.staff.id%>?v=<%= doc.staff.icon_version%>" class="img-rounded user-icon" width="100" height="100">
+                        <img src="/staff/icon/<%=doc.staff.id%>?v=<%= doc.staff.icon_version%>" class="img-rounded user-icon" width="127" height="127">
                     </div>
                     <div class="col-sm-3 text-center staff-title">
                         <h1><%= doc.staff.nick%></h1>
@@ -34,7 +34,9 @@
                     <div class="form-group">
                         <label for="email" class="col-sm-5 control-label">Email:</label>
                         <div class="col-sm-6 form-display">
-                            <%= doc.staff.email%>
+                            <%if (doc.staff.email){%>
+                                <a href="mailto:<%=doc.staff.email%>"><%=doc.staff.email%></a>
+                            <%}%>
                         </div>
                     </div>
                     <div class="form-group">

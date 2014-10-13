@@ -9,9 +9,10 @@ require([
     'app/staff/staffCommonModule',
     'ui/upload/directives/fileUpload',
     'ui/form/directives/datepicker',
-    'landmark/angularjs/commonService'
+    'landmark/angularjs/commonService',
+    'landmark/angularjs/commonDirectives'
 ], function(doc, angular, params, common){
-    var app = angular.module('profileApp', ['ui.upload', 'lm.commonService', 'ui.form']);
+    var app = angular.module('profileApp', ['ui.upload', 'lm.commonService', 'ui.form', 'lm.commonDirectives']);
 
     app.controller('mainCtrl', ['$scope', '_getService', '$http',
         function($scope, _getService, $http){

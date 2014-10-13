@@ -27,7 +27,8 @@ require([
             $scope.$watch('data.newPwd', function(newPwd){
                 checkPwd(newPwd);
             });
-            $scope.$watch('data.pwdAgain', function(pwd){
+            $scope.$watch('data.pwdAgain + data.newPwd', function(){
+                var pwd = data.pwdAgain;
                 if (!pwd) {
                     $scope.isPwdAgainValid = false;
                     $scope.pwdAgainTip = '';

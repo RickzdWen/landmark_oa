@@ -25,7 +25,7 @@
                         <label for="email" class="col-sm-3 control-label">Email:</label>
                         <div class="col-sm-6">
                             <input type="email" id="email" ng-model="staff.email" class="form-control" ng-blur="showEmailError=true;" placeholder="please input your email">
-                            <span class="text-danger" ng-show="showEmailError&&!validInfo.isEmailValid">the email is not valid</span>
+                            <span class="text-danger" style="display: none;" remove-display-none ng-show="showEmailError&&!validInfo.isEmailValid">the email is not valid</span>
                         </div>
                     </div>
                     <div class="form-group">
@@ -64,7 +64,7 @@
                         <label for="qq" class="col-sm-3 control-label">QQ:</label>
                         <div class="col-sm-6">
                             <input type="text" id="qq" ng-model="staff.qq" class="form-control" ng-blur="showQqError=true;" placeholder="qq number">
-                            <span class="text-danger" ng-show="showQqError&&!validInfo.isQqValid">the qq is not valid</span>
+                            <span class="text-danger" style="display: none;" remove-display-none ng-show="showQqError&&!validInfo.isQqValid">the qq is not valid</span>
                         </div>
                     </div>
                     <div class="form-group">

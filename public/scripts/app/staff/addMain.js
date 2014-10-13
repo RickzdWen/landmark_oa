@@ -7,9 +7,10 @@ require([
     'angular',
     'app/staff/staffCommonModule',
     'ui/form/directives/datepicker',
-    'landmark/angularjs/commonService'
+    'landmark/angularjs/commonService',
+    'landmark/angularjs/commonDirectives'
 ], function(doc, angular, common){
-    var app = angular.module('addMemberApp', ['lm.commonService', 'ui.form']);
+    var app = angular.module('addMemberApp', ['lm.commonService', 'ui.form', 'lm.commonDirectives']);
 
     app.controller('mainCtrl', ['$scope', '_getService', '$http',
         function($scope, _getService, $http){
