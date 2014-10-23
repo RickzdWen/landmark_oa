@@ -14,7 +14,6 @@ define([
                 var listener = scope.$watch(function(){
                     return ngModel.$modelValue;
                 }, function(modelValue){
-                    console.log(modelValue);
                     elem.datepicker('update');
                     listener();
                     elem.on('changeDate', function(){
