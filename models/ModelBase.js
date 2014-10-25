@@ -27,7 +27,6 @@ ModelBase.prototype.getAll = function(sql, cond, selector) {
     cond = cond || [];
     selector = selector || '*';
     sql = 'SELECT ' + selector + ' FROM ' + this.table + ' WHERE ' + sql;
-    console.log(sql);
     var defered = q.defer();
     pool.getConnection(function(err, connection){
         if (err) {

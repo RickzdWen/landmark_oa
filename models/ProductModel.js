@@ -10,7 +10,25 @@ var CommonError = require(ROOT_PATH + '/libs/errors/CommonError');
 var _instance = null;
 
 var ProductModel = declare([lmBase], {
-    table : 'product'
+    table : 'product',
+
+    getNumberByCategory : function() {
+        var defered = q.defer();
+        this.getAll('GROUP BY cid', [], 'COUNT(*) AS count,cid').then(function(rows){
+            rows = rows || [];
+            var ret = {};
+            for (var i = 0, len = rows.length; i < len; ++i) {
+                var item = rows[i];
+                if (item.cid) {
+                    ret[item.cid] = item.count;
+                }
+            }
+            defered.resolve(ret);
+        }, function(err){
+            defered.reject(err);
+        });
+        return defered;
+    }
 });
 
 ProductModel.getInstance = function() {

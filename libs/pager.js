@@ -2,7 +2,7 @@
  * Created by rick on 2014/10/23.
  */
 
-module.getPagerInfo = function(page, maxPage, reqUrl, params) {
+exports.getPagerInfo = function(page, maxPage, reqUrl, params) {
     var info = {
         page : page,
         maxPage : maxPage,
