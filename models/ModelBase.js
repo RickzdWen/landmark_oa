@@ -118,7 +118,6 @@ ModelBase.prototype.update = function(data, sql, cond) {
                 defered.reject(new CommonError(err));
             } else {
                 cond = cond || [];
-//                connection.query('SET NAMES utf8', [], function(){});
                 connection.query(sql, condTmp.concat(cond), function(err, result){
                     if (err) {
                         defered.reject(new CommonError(err));
@@ -131,6 +130,33 @@ ModelBase.prototype.update = function(data, sql, cond) {
         });
     }
     return defered.promise;
+};
+
+ModelBase.prototype.delete = function(sql, cond) {
+    var pool = poolManager.getPool(this.wdb);
+    var defered = q.defer();
+    sql = sql || '1<>1';
+    cond = cond || [];
+    sql = 'DELETE FROM ' + this.table + ' WHERE ' + sql;
+    pool.getConnection(function(err, connection){
+        if (err) {
+            defered.reject(new CommonError(err));
+        } else {
+            connection.query(sql, cond, function(err, result){
+                if (err) {
+                    defered.reject(new CommonError(err));
+                } else {
+                    defered.resolve(result);
+                }
+                connection.release();
+            });
+        }
+    });
+    return defered.promise;
+};
+
+ModelBase.prototype.deleteAll = function(sql, cond) {
+    return this.delete('1<>2');
 };
 
 module.exports = ModelBase;

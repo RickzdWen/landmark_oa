@@ -33,7 +33,7 @@ router.get('/categories', function(req, res, next){
             var info = retArray[1];
             for (var i = 0, len = list.length; i < len; ++i) {
                 var item = list[i];
-                item.productNum = info[item.id] || 0;
+                item.product_num = info[item.id] || 0;
             }
             res.doc.list = list;
             if (res._view) {
@@ -45,21 +45,68 @@ router.get('/categories', function(req, res, next){
         }, function(err){
             next(err);
         });
-//        ProductCategoryModel.getInstance().getByPage(page).then(function(ret){
-//            var pageInfo = pager.getPagerInfo(ret.page, ret.totalPage);
-//            ret.pageInfo = pageInfo;
-//            res.doc.categories = ret;
-//            if (res._view) {
-//                res.render(res._view, res);
-//            } else {
-//                res.json(res.doc);
-//            }
-//        }, function(err){
-//            next(err);
-//        });
     } catch (err) {
         next(err);
     }
 });
+
+router.post('/category', function(req, res, next){
+    try {
+        var data = constructData(req);
+        ProductCategoryModel.getInstance().addNewCategory(data).then(function(ret){
+            res.json(ret);
+        }, function(err){
+            next(err);
+        });
+    } catch (err) {
+        next(err);
+    }
+});
+
+router.post('/update-category', function(req, res, next){
+    try {
+        var id = req.body.id;
+        if (!id) {
+            throw new CommonError('', 50002);
+        }
+        var data = constructData(req);
+        ProductCategoryModel.getInstance().updateById(data, id).then(function(ret){
+            res.json({code:0});
+        }, function(err){
+            next(err);
+        });
+    } catch (err) {
+        next(err);
+    }
+});
+
+router.post('/delete-category', function(req, res, next){
+    try {
+        var id = req.body.id;
+        if (!id) {
+            throw new CommonError('', 50002);
+        }
+        var q = require('q');
+        q.all([
+            ProductCategoryModel.getInstance().deleteById(id),
+            ProductModel.getInstance().removeCategoryByCid(id)
+        ]).then(function(result){
+            res.json(result);
+        }, function(err){
+            next(err);
+        });
+    } catch (err) {
+        next(err);
+    }
+});
+
+function constructData(req) {
+    var data = {};
+    data.name_us = req.body.name_us;
+    data.name_cn = req.body.name_cn;
+    data.name_hk = req.body.name_hk;
+    data.remark = req.body.remark;
+    return data;
+}
 
 module.exports = router;

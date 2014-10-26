@@ -28,6 +28,15 @@ var ProductModel = declare([lmBase], {
             defered.reject(err);
         });
         return defered;
+    },
+
+    removeCategoryByCid : function(cid) {
+        if (!cid) {
+            throw  new CommonError('', 50002);
+        }
+        return this.update({
+            cid : 0
+        }, 'cid=?', [cid]);
     }
 });
 
