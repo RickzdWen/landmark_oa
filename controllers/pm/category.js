@@ -6,7 +6,7 @@ var express = require('express');
 var router = express.Router();
 var ProductCategoryModel = require(ROOT_PATH + '/models/ProductCategoryModel');
 var ProductModel = require(ROOT_PATH + '/models/ProductModel');
-//var CommonError = require(ROOT_PATH + '/libs/errors/CommonError');
+var CommonError = require(ROOT_PATH + '/libs/errors/CommonError');
 
 router.get('/', function(req, res, next){
     res.redirect('/pm/categories');
@@ -14,7 +14,6 @@ router.get('/', function(req, res, next){
 
 router.get('/categories', function(req, res, next){
     try {
-        var page = req.query.page || 1;
         var of = req.query.of || '';
         if (!of) {
             res._view = 'pm/categories';
@@ -63,7 +62,7 @@ router.post('/category', function(req, res, next){
     }
 });
 
-router.post('/update-category', function(req, res, next){
+router.put('/category', function(req, res, next){
     try {
         var id = req.body.id;
         if (!id) {
@@ -80,9 +79,9 @@ router.post('/update-category', function(req, res, next){
     }
 });
 
-router.post('/delete-category', function(req, res, next){
+router.delete('/category', function(req, res, next){
     try {
-        var id = req.body.id;
+        var id = req.query.id;
         if (!id) {
             throw new CommonError('', 50002);
         }

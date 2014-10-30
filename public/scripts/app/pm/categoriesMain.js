@@ -85,7 +85,7 @@ require([
                     return;
                 }
                 submitting = true;
-                _getService($http.post('/pm/update-category', data)).then(function(){
+                _getService($http.put('/pm/category', data)).then(function(){
                     $scope.mCategory = angular.extend($scope.mCategory, data);
                     modalData.show = false;
                 }, function(error){
@@ -120,8 +120,10 @@ require([
                 }
                 submitting = true;
                 var category = list[$scope.deleteIndex];
-                _getService($http.post('/pm/delete-category', {
-                    id : category.id
+                _getService($http.delete('/pm/category', {
+                    params : {
+                        id : category.id
+                    }
                 })).then(function(ret){
                     list.splice($scope.deleteIndex, 1);
                     confirmData.show =false;
