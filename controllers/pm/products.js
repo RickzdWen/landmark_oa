@@ -1,5 +1,5 @@
 /**
- * Created by Administrator on 2014/10/31.
+ * Created by rick on 2014/10/31.
  */
 
 var express = require('express');
@@ -8,9 +8,8 @@ var ProductCategoryModel = require(ROOT_PATH + '/models/ProductCategoryModel');
 var ProductModel = require(ROOT_PATH + '/models/ProductModel');
 var CommonError = require(ROOT_PATH + '/libs/errors/CommonError');
 
-router.get('/products', function(req, res, next){
+router.get('/', function(req, res, next){
     try {
-        console.log('here');
         var page = req.query.page || 1;
         var of = req.query.of;
         var name = req.query.name;

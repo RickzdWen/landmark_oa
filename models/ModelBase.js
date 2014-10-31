@@ -159,4 +159,14 @@ ModelBase.prototype.deleteAll = function(sql, cond) {
     return this.delete('1<>2');
 };
 
+ModelBase.prototype.getMap = function(rows, key) {
+    rows = rows || [];
+    var map = {};
+    for (var i = 0, len = rows.length; i < len; ++i) {
+        var item = rows[i];
+        map[item[key]] = item;
+    }
+    return map;
+};
+
 module.exports = ModelBase;

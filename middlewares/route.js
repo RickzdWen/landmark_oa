@@ -17,42 +17,35 @@ function isDictionary(filePath) {
 
 function initControllers(dirName, viewDirName, trackPath) {
     trackPath = trackPath || '/';
+    var hasIndex = false;
     fs.readdirSync(dirName).forEach(function(item){
         var filePath = path.join(dirName, item);
         if (isDictionary(filePath)) {
             var viewPath = path.join(viewDirName, item);
             initControllers(filePath, viewPath, trackPath + item.toLowerCase() + '/');
-        } else if (/\.js$/.test(item)) {
-            var controller = require(filePath);
+        } else if (/(.+)\.js$/.test(item)) {
+            var fileName = RegExp.$1;
             verbose && console.log('loading: ' + filePath);
-            var app = express();
             verbose && console.log('view dir: ' + viewDirName);
             verbose && console.log('trackPath: ' + trackPath);
 //            app.set('views', viewDirName);
-            app.use(trackPath, controller);
-//            app.use(trackPath, function(req, res, next){
-//                console.log('xxxxx');
-//                console.log(req.url);
-//                if (res._view) {
-//                    console.log(res._view);
-//                    // 有_view的话认为其需要展现页面
-//                    res.render(res._view, {
-//                        doc : res.doc
-//                    });
-//                } else if (res.doc) {
-//                    // 有doc的话则返回json数据
-//                    console.log('doccc');
-//                    res.json(res.doc);
-//                    res.end();
-//                } else {
-//                    // 都没有的话就出错了，交给后面处理
-//                    console.log('nnnnn');
-//                    next();
-//                }
-//            });
-            parentApp.use(app);
+            if (fileName == 'index') {
+                hasIndex = true;
+            } else {
+                var controller = require(filePath);
+                var app = express();
+                var routePath = trackPath + fileName + '/';
+                app.use(routePath, controller);
+                parentApp.use(app);
+                verbose && console.log('routePath: ' + routePath);
+            }
         }
     });
+    if (hasIndex) {
+        var app = express();
+        app.use(trackPath, require(path.join(dirName, 'index.js')));
+        parentApp.use(app);
+    }
 }
 
 module.exports = function(parent, options) {

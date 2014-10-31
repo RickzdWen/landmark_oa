@@ -35,6 +35,17 @@ var ProductCategoryModel = declare([lmBase], {
             throw new CommonError('', 50002);
         }
         return this.delete('id=?', [id]);
+    },
+
+    getAllMap : function() {
+        var defered = require('q').defer();
+        var self = this;
+        this.getAll().then(function(rows){
+            defered.resolve(self.getMap(rows, 'id'));
+        }, function(err){
+            defered.reject(err);
+        });
+        return defered.promise;
     }
 });
 
