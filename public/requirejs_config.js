@@ -16,7 +16,9 @@ require = {
         'angular-resource' : '/bower_components/angular-resource/angular-resource.min',
         'angular-md5' : '/bower_components/angular-md5/angular-md5.min',
         'datepicker' : '/bower_components/bootstrap-datepicker/js/bootstrap-datepicker',
-        'angular-bootstrap' : '/bower_components/ui-bootstrap.min'
+        'angular-bootstrap' : '/bower_components/angular-bootstrap/ui-bootstrap-tpls.min',
+        'angular-ui-select' : '/bower_components/angular-ui-select/dist/select.min',
+        'moment' : '/bower_components/moment/min/moment.min'
     },
     shim : {
         'angular' : {
@@ -28,7 +30,8 @@ require = {
         'angular-md5' : ['angular'],
         'bootstrap' : ['jquery'],
         'datepicker' : ['jquery', 'bootstrap'],
-        'angular-bootstrap' : ['angular', 'bootstrap']
+        'angular-bootstrap' : ['angular', 'bootstrap'],
+        'angular-ui-select' : ['angular', 'bootstrap']
     },
     config : {
         'app/common/params' : _params || {}

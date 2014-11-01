@@ -28,11 +28,16 @@ ModelBase.prototype.getAll = function(sql, cond, selector) {
     selector = selector || '*';
     sql = 'SELECT ' + selector + ' FROM ' + this.table + ' WHERE ' + sql;
     var defered = q.defer();
+    console.log(11);
     pool.getConnection(function(err, connection){
         if (err) {
             defered.reject(new CommonError(err));
         } else {
+            console.log(22);
+            console.log(sql);
             connection.query(sql, cond, function(err, rows){
+                console.log(33);
+                console.log(sql);
                 if (err) {
                     defered.reject(new CommonError(err));
                 } else {

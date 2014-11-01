@@ -32,7 +32,7 @@
                     <td ng-bind="category.product_num"></td>
                     <td ng-bind="category.remark"></td>
                     <td>
-                        <a class="btn btn-success" href="#">
+                        <a class="btn btn-success" ng-href="/pm/products?cid={{category.id}}">
                             <i class="glyphicon glyphicon-zoom-in icon-white"></i>
                             Products
                         </a>

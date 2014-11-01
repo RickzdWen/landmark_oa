@@ -7,12 +7,13 @@ require([
     'angular',
     'app/common/params',
     'app/staff/staffCommonModule',
+    'moment',
     'ui/upload/directives/fileUpload',
-    'ui/form/directives/datepicker',
     'landmark/angularjs/commonService',
-    'landmark/angularjs/commonDirectives'
-], function(doc, angular, params, common){
-    var app = angular.module('profileApp', ['ui.upload', 'lm.commonService', 'ui.form', 'lm.commonDirectives']);
+    'landmark/angularjs/commonDirectives',
+    'angular-bootstrap'
+], function(doc, angular, params, common, moment){
+    var app = angular.module('profileApp', ['ui.upload', 'lm.commonService', 'lm.commonDirectives', 'ui.bootstrap']);
 
     app.controller('mainCtrl', ['$scope', '_getService', '$http',
         function($scope, _getService, $http){
@@ -35,6 +36,24 @@ require([
                     $scope.submiting = false;
                 });
             }
+    }]);
+
+    app.controller('birthCtrl', ['$scope',
+        function($scope){
+            $scope.opened = false;
+            $scope.toggleOpen = function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                $scope.opened = !$scope.opened;
+            };
+            $scope.$watch('staff.birth', function(birth){
+                if (birth && typeof birth == 'object') {
+                    $scope.staff.birth = moment(birth).format('MM/DD/YYYY');
+                }
+            });
+            $scope.options = {
+                'show-weeks' : false
+            };
     }]);
 
     angular.bootstrap(angular.element('.main-container')[0], ['profileApp']);

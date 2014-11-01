@@ -21,12 +21,9 @@ router.post('/', function(req, res, next){
     }
 });
 
-router.put('/', function(req, res, next){
+router.put('/:id', function(req, res, next){
     try {
-        var id = req.body.id;
-        if (!id) {
-            throw new CommonError('', 50002);
-        }
+        var id = req.params.id;
         var data = constructData(req);
         ProductCategoryModel.getInstance().updateById(data, id).then(function(ret){
             res.json({code:0});
@@ -38,9 +35,9 @@ router.put('/', function(req, res, next){
     }
 });
 
-router.delete('/', function(req, res, next){
+router.delete('/:id', function(req, res, next){
     try {
-        var id = req.query.id;
+        var id = req.params.id;
         if (!id) {
             throw new CommonError('', 50002);
         }

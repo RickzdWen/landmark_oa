@@ -44,7 +44,7 @@ router.get('/', function(req, res, next){
             var categories = resArray[1];
             for (var i = 0, len = list.length; i < len; ++i) {
                 var item = list[i];
-                var cItem = categories[item.id];
+                var cItem = item.cid && categories[item.cid];
                 if (cItem) {
                     item.category_us = cItem.name_us;
                     item.category_cn = cItem.name_cn;
@@ -52,7 +52,9 @@ router.get('/', function(req, res, next){
                 }
             }
             res.doc.products = pRet;
+            res.doc.categories = categories;
             if (res._view) {
+                res.doc.productsJson = JSON.stringify(pRet);
                 res.render(res._view, res);
             } else {
                 res.json(res.doc);

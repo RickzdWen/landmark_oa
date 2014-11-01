@@ -240,3 +240,25 @@ div.center, p.center, img.center {
     font-size: 12px;
     padding-top: 4px;
 }
+
+.form-control-select {
+    border: 0;
+    padding: 0;
+    box-shadow: none;
+}
+
+.form-control-select .btn,
+.form-control-select .dropdown-menu{
+    width: 100%;
+}
+.form-control-select .btn {
+    background: #ffffff;
+    border: 1px solid #cccccc;
+}
+.form-control-select .btn .select-display-text {
+    display: inline-block;
+    height: 16px;
+}
+.form-control-select .btn .caret {
+    margin-top: 8px;
+}

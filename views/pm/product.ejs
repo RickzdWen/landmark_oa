@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include ../common_head.ejs%>
+</head>
+<body ng-controller="mainCtrl">
+<%- include ../common_header.ejs%>
+<div class="main-container">
+    <div class="row">
+        <%- include left_nav.ejs%>
+        <div class="col-md-10 col-lg-10">
+            <div class="main-part">
+                <div class="h2" ng-bind="product.name_us"><%=doc.title%></div>
+                <div class="divider"></div>
+                <div class="row">
+                    <div class="box col-sm-12">
+                        <div class="box-inner">
+                            <div class="box-header well" data-original-title="">
+                                <h2>Basic Information</h2>
+
+                                <div class="box-icon">
+                                    <a href="javascript:void(0)" class="btn btn-minimize btn-round btn-default" ng-click="hideBasic=!hideBasic;"><i
+                                                class="glyphicon" ng-class="{'glyphicon-chevron-up':!hideBasic,'glyphicon-chevron-down':hideBasic}"></i></a>
+                                </div>
+                            </div>
+                            <div class="box-content" ng-hide="hideBasic">
+                                <form class="form-horizontal" role="form">
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">Name:</label>
+                                        <div class="col-sm-2 form-display" ng-bind="product.name_us">
+                                            <%= doc.product.name_us%>
+                                        </div>
+                                        <label class="col-sm-2 control-label">Simple Chinese Name:</label>
+                                        <div class="col-sm-2 form-display" ng-bind="product.name_cn">
+                                            <%= doc.product.name_cn%>
+                                        </div>
+                                        <label class="col-sm-2 control-label">Traditional Chinese Name:</label>
+                                        <div class="col-sm-2 form-display" ng-bind="product.name_hk">
+                                            <%= doc.product.name_hk%>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">Category:</label>
+                                        <div class="col-sm-2 form-display" ng-bind="product.category_us">
+                                            <%= doc.product.category_us||''%>
+                                        </div>
+                                        <label class="col-sm-2 control-label">Quantity:</label>
+                                        <div class="col-sm-2 form-display" ng-bind="product.qty">
+                                            <%= doc.product.qty%>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">Remark:</label>
+                                        <div class="col-sm-2 form-display" ng-bind="product.remark">
+                                            <%= doc.product.remark%>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-2 col-sm-offset-8">
+                                            <button class="btn btn-success btn-landmark btn-block" ng-click="showEdit($event);">Edit</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true" lm-modal data-pass-data="editModalData">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" ng-click="editModalData.show=false;">×</button>
+                <h3 class="lmp-color">Modify Basic Information</h3>
+            </div>
+            <div class="modal-body">
+                <form role="form">
+                    <div class="form-group" ng-class="{'has-error':errorShow.name_us&&!data.name_us}">
+                        <label for="name_us">Name</label>
+                        <input type="text" class="form-control" id="name_us" placeholder="english"
+                               ng-model="data.name_us" ng-blur="valid('name_us');">
+                    </div>
+                    <div class="form-group" ng-class="{'has-error':errorShow.name_cn&&!data.name_cn}">
+                        <label for="name_cn">Simple Chinese Name</label>
+                        <input type="text" class="form-control" id="name_cn" placeholder="simple chinese"
+                               ng-model="data.name_cn" ng-blur="valid('name_cn');">
+                    </div>
+                    <div class="form-group" ng-class="{'has-error':errorShow.name_hk&&!data.name_hk}">
+                        <label for="name_hk">Traditional Chinese Name</label>
+                        <input type="text" class="form-control" id="name_hk" placeholder="traditional chinese"
+                               ng-model="data.name_hk" ng-blur="valid('name_hk');">
+                    </div>
+                    <div class="form-group">
+                        <label>Category:</label>
+                        <div class="form-control btn-group form-control-select" dropdown is-open="cOpened">
+                            <button type="button" class="btn dropdown-toggle">
+                                <span class="select-display-text" ng-bind="data.category_us"></span><span class="caret pull-right"></span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu">
+                                <% for(var i in doc.categories){var cat=doc.categories[i];%>
+                                <li><a href="javascript:void(0)" ng-click="selectCategory($event, <%=cat.id%>, '<%=cat.name_us%>');"><%=cat.name_us%></a></li>
+                                <%}%>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="remark">Remark</label>
+                        <textarea class="form-control" rows="3" id="remark" placeholder="remark if any" ng-model="data.remark"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <a href="javascript:void(0)" class="btn btn-default" ng-click="editModalData.show=false;">Close</a>
+                <a href="javascript:void(0)" class="btn btn-primary btn-landmark" ng-click="modify($event);">Modify</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include ../common_footer.ejs%>
+</body>
+<script>
+    var _params = {};
+    _params.product = <%- doc.productJson%>;
+</script>
+<script type="text/javascript" src="/requirejs_config.js"></script>
+<script data-main="app/pm/productMain" src="/bower_components/requirejs/require.js"></script>
+</html>

@@ -8,60 +8,112 @@ var ProductCategoryModel = require(ROOT_PATH + '/models/ProductCategoryModel');
 var ProductModel = require(ROOT_PATH + '/models/ProductModel');
 var CommonError = require(ROOT_PATH + '/libs/errors/CommonError');
 
-router.get('/products', function(req, res, next){
+router.get('/', function(req, res, next){
     try {
-        console.log('here');
-        var page = req.query.page || 1;
-        var of = req.query.of;
-        var name = req.query.name;
-        var cid = req.query.cid;
-        if (!of) {
-            res._view = 'pm/products';
-        }
-        var sql = '1<>2';
-        var cond = [];
-        if (name) {
-            sql += ' AND (name_us LIKE ? OR name_hk LIKE ? OR name_cn LIKE ?)';
-            for (var i = 0; i < 3; ++i) {
-                cond.push(['%', name, '%'].join(''));
-            }
-        }
-        if (cid && cid !== '0') {
-            sql += ' AND cid=?';
-            cond.push(cid);
-        }
         res.doc = {
             category : 'pm',
-            nav : 'products',
-            title : 'Products'
+            nav : 'product_add',
+            title : 'Add New Product'
         };
-        var q = require('q');
-        q.all([
-            ProductModel.getInstance().getByPage(sql, cond, '*', page),
-            ProductCategoryModel.getInstance().getAllMap()
-        ]).then(function(resArray){
-            var pRet = resArray[0];
-            var list = pRet.result || [];
-            var categories = resArray[1];
-            for (var i = 0, len = list.length; i < len; ++i) {
-                var item = list[i];
-                var cItem = categories[item.id];
-                if (cItem) {
-                    item.category_us = cItem.name_us;
-                    item.category_cn = cItem.name_cn;
-                    item.category_hk = cItem.name_hk;
-                }
-            }
-            res.doc.products = pRet;
-            if (res._view) {
-                res.render(res._view, res);
-            } else {
-                res.json(res.doc);
-            }
+        res._view = 'pm/product_add';
+        ProductCategoryModel.getInstance().getAll().then(function(rows){
+            res.doc.categories = rows;
+            res.render(res._view, res);
+        }, function(err){
+            next(err);
         });
     } catch (err) {
         next(err);
     }
 });
+
+router.post('/', function(req, res, next){
+    try {
+        var data = constructProductData(req);
+        ProductModel.getInstance().addNewProduct(data).then(function(ret){
+            res.doc = ret;
+            res.json(res.doc);
+        }, function(err){
+            next(err);
+        })
+    } catch (err) {
+        next(err);
+    }
+});
+
+router.get('/:id', function(req, res, next){
+    try {
+        var id = req.params.id;
+        res._view = 'pm/product';
+        res.doc = {
+            category : 'pm',
+            nav : 'products'
+        };
+        var q = require('q');
+        q.all([
+            ProductModel.getInstance().getOne('id=?', [id]),
+            ProductCategoryModel.getInstance().getAllMap()
+        ]).then(function(retArray){
+            var product = retArray[0];
+            if (!product) {
+                throw new CommonError('', 50004);
+            }
+            var categories = retArray[1];
+            var cat = categories[product.cid];
+            if (cat) {
+                product.category_us = cat.name_us;
+                product.category_cn = cat.name_cn;
+                product.category_hk = cat.name_hk;
+            }
+            res.doc.product = product;
+            res.doc.productJson = JSON.stringify(product);
+            res.doc.categories = categories;
+            res.doc.title = product.name_us;
+            res.render(res._view, res);
+        }, function(err){
+            next(err);
+        })
+    } catch (err) {
+        next(err);
+    }
+});
+
+router.put('/:id', function(req, res, next){
+    try {
+        var id = req.params.id;
+        var data = constructProductData(req);
+        ProductModel.getInstance().updateById(data, id).then(function(ret){
+            res.doc = ret;
+            res.json(res.doc);
+        }, function(err){
+            next(err);
+        });
+    } catch (err) {
+        next(err);
+    }
+});
+
+router.delete('/:id', function(req, res, next){
+    try {
+        var id = req.params.id;
+        ProductModel.getInstance().deleteById(id).then(function(){
+            res.json({});
+        }, function(err){
+            next(err);
+        });
+    } catch (err) {
+        next(err);
+    }
+});
+
+function constructProductData(req) {
+    var data = {};
+    data.name_us = req.body.name_us;
+    data.name_cn = req.body.name_cn;
+    data.name_hk = req.body.name_hk;
+    data.cid = req.body.cid || '';
+    data.remark = req.body.remark || '';
+    return data;
+}
 
 module.exports = router;

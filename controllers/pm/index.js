@@ -6,7 +6,7 @@ var express = require('express');
 var router = express.Router();
 
 router.get('/', function(req, res, next){
-    res.redirect('/pm/categories');
+    res.redirect('/pm/products');
 });
 
 module.exports = router;
