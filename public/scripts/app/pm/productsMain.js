@@ -7,14 +7,16 @@ require([
     'angular',
     'app/common/params',
     'landmark/angularjs/commonService',
-    'landmark/angularjs/commonDirectives'
+    'landmark/angularjs/commonDirectives',
+    'angular-bootstrap'
 ], function(doc, angular, params){
-    var app = angular.module('productsApp', ['lm.commonService', 'lm.commonDirectives']);
+    var app = angular.module('productsApp', ['lm.commonService', 'lm.commonDirectives', 'ui.bootstrap']);
 
     app.controller('mainCtrl', ['$scope', '_getService', '$http',
         function($scope, _getService, $http){
             $scope.info = params.productsInfo || {};
             var list = $scope.info.result;
+            var pager = $scope.pager = $scope.info.pager;
 
             var confirmData = $scope.confirmData = {
                 show :false
@@ -40,7 +42,11 @@ require([
                 })['finally'](function(){
                     submitting = false;
                 });
-            }
+            };
+
+            $scope.pageChanged = function() {
+                window.location.href = '/pm/products?page=' + pager.page;
+            };
     }]);
 
     angular.bootstrap(doc, ['productsApp']);

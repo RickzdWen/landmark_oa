@@ -262,3 +262,14 @@ div.center, p.center, img.center {
 .form-control-select .btn .caret {
     margin-top: 8px;
 }
+
+.pagination-wrapper {
+    margin-top: -20px;
+}
+.pagination>li>a, .pagination>li>span {
+    color: #8BC21E;
+}
+.pagination>.active>a, .pagination>.active>span, .pagination>.active>a:hover, .pagination>.active>span:hover, .pagination>.active>a:focus, .pagination>.active>span:focus {
+    background-color: #8BC21E;
+    border-color: #8BC21E;
+}

@@ -53,21 +53,23 @@ ModelBase.prototype.getAll = function(sql, cond, selector) {
 
 ModelBase.prototype.pageLimit = 20;
 ModelBase.prototype.getByPage = function(sql, cond, selector, page, pageLimit) {
-    page = page || 1;
-    pageLimit = pageLimit || this.pageLimit;
+    page = +page || 1;
+    pageLimit = +pageLimit || this.pageLimit;
     var defered = q.defer();
     var self = this;
     this.getOne(sql, cond, 'COUNT(*) AS count').then(function(row){
         var ret = {};
-        ret.count = row && row['count'];
-        ret.totalPage = Math.ceil(ret.count/ pageLimit);
-        page = page > ret.totalPage ? ret.totalPage : page;
-        ret.page = page;
-        if (ret.totalPage) {
+        var pager = {};
+        pager.count = row && row['count'];
+        pager.totalPage = Math.ceil(pager.count/ pageLimit);
+        page = page > pager.totalPage ? pager.totalPage : page;
+        pager.page = page;
+        pager.size = pageLimit;
+        ret.pager = pager;
+        if (pager.totalPage) {
             var from = (page - 1) * pageLimit;
-            var to = page * pageLimit;
             sql = sql || '1<>2';
-            sql += ' LIMIT ' + from + ',' + to;
+            sql += ' LIMIT ' + from + ',' + pageLimit;
             self.getAll(sql, cond, selector).then(function(rows){
                 ret.result = rows;
                 defered.resolve(ret);

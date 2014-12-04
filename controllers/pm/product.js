@@ -113,6 +113,7 @@ function constructProductData(req) {
     data.name_hk = req.body.name_hk;
     data.cid = req.body.cid || '';
     data.remark = req.body.remark || '';
+    data.infinity_flag = req.body.infinity_flag ? 1 : 0;
     return data;
 }
 

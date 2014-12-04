@@ -33,7 +33,7 @@
                         <td ng-bind="product.name_cn"></td>
                         <td ng-bind="product.name_hk"></td>
                         <td ng-bind="product.category_us"></td>
-                        <td ng-bind="product.qty"></td>
+                        <td><span ng-bind="product.qty" ng-if="!product.infinity_flag"></span><span ng-if="product.infinity_flag">Infinity</span></td>
                         <td ng-bind="product.remark"></td>
                         <td>
                             <a class="btn btn-success" ng-href="/pm/product/{{product.id}}">
@@ -46,6 +46,10 @@
                             </a>
                         </td>
                     </tr></tbody></table>
+                <div class="pull-right pagination-wrapper">
+                    <pagination total-items="pager.count" ng-model="pager.page" items-per-page="pager.size" boundary-links="true"
+                                max-size="4" rotate="false" ng-change="pageChanged()"></pagination>
+                </div>
                 <a href="/pm/product" class="btn btn-success btn-landmark">
                     <i class="glyphicon glyphicon-plus icon-white"></i>
                     Add New Product

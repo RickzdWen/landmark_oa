@@ -45,8 +45,11 @@
                                             <%= doc.product.category_us||''%>
                                         </div>
                                         <label class="col-sm-2 control-label">Quantity:</label>
-                                        <div class="col-sm-2 form-display" ng-bind="product.qty">
+                                        <div class="col-sm-2 form-display" ng-bind="product.qty" ng-if="!product.infinity_flag">
                                             <%= doc.product.qty%>
+                                        </div>
+                                        <div class="col-sm-2 form-display" ng-if="product.infinity_flag">
+                                            Infinity
                                         </div>
                                     </div>
                                     <div class="form-group">
@@ -107,6 +110,11 @@
                                 <%}%>
                             </ul>
                         </div>
+                    </div>
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" ng-checked="data.infinity_flag" ng-model="data.infinity_flag"> Infinity Quantity
+                        </label>
                     </div>
                     <div class="form-group">
                         <label for="remark">Remark</label>

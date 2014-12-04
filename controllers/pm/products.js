@@ -11,6 +11,7 @@ var CommonError = require(ROOT_PATH + '/libs/errors/CommonError');
 router.get('/', function(req, res, next){
     try {
         var page = req.query.page || 1;
+        var size = req.query.size || 20;
         var of = req.query.of;
         var name = req.query.name;
         var cid = req.query.cid;
@@ -36,7 +37,7 @@ router.get('/', function(req, res, next){
         };
         var q = require('q');
         q.all([
-            ProductModel.getInstance().getByPage(sql, cond, '*', page),
+            ProductModel.getInstance().getByPage(sql, cond, '*', page, size),
             ProductCategoryModel.getInstance().getAllMap()
         ]).then(function(resArray){
             var pRet = resArray[0];
