@@ -106,6 +106,27 @@ ModelBase.prototype.create = function(data) {
     return defered.promise;
 };
 
+ModelBase.prototype.replace = function(data) {
+    var pool = poolManager.getPool(this.wdb);
+    var sql = 'REPLACE INTO ' + this.table + ' SET ?';
+    var defered = q.defer();
+    pool.getConnection(function(err, connection){
+        if (err) {
+            defered.reject(new CommonError(err));
+        } else {
+            connection.query(sql, data, function(err, result){
+                if (err) {
+                    defered.reject(new CommonError(err));
+                } else {
+                    defered.resolve(result);
+                }
+                connection.release();
+            });
+        }
+    });
+    return defered.promise;
+};
+
 ModelBase.prototype.update = function(data, sql, cond) {
     var pool = poolManager.getPool(this.wdb);
     var defered = q.defer();

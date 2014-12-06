@@ -67,6 +67,11 @@ require([
                 $scope.data.category_us = name;
                 $scope.data.cid = cid;
             };
+
+            $scope.featureType = 'us';
+            $scope.selectType = function(name, value){
+                $scope[name + 'Type'] = value;
+            };
     }]);
 
     angular.bootstrap(doc, ['productApp']);
