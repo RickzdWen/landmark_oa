@@ -28,6 +28,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(require(path.join(ROOT_PATH, 'middlewares/loginChecker')).checkOaLogin());
 
+app.use('/ueditor/ue', require(path.join(ROOT_PATH, 'middlewares/ueditorProcessor'))());
+
 require(path.join(ROOT_PATH, 'middlewares/route'))(app, {
     verbose : false
 });
