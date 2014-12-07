@@ -62,14 +62,14 @@ body {
     border : 1px solid #333;
 }
 .btn-upload {
-    width: 80px;
-    display: block;
     padding: 2px 4px;
 }
 .profile-title .btn-upload-wrap {
     width: 100%;
 }
 .profile-title .btn-upload {
+    width: 80px;
+    display: block;
     float: right;
     margin-top: 5px;
     margin-right: 10px;

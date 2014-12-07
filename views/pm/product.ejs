@@ -25,6 +25,13 @@
                             </div>
                             <div class="box-content" ng-hide="hideBasic">
                                 <form class="form-horizontal" role="form">
+                                    <div class="col-sm-2">
+                                        <div class="row center">
+                                            <img ng-src="/images/products/<%= doc.product.id%>.jpg?v={{product.img_version}}" width="50%" height="50%">
+                                            <div class="btn-upload-wrap"><span lmp-file-upload data-upload-url="/pm/product/upload-image/<%= doc.product.id%>" upload-call-back="uploadCallBack"></span></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-10">
                                     <div class="form-group">
                                         <label class="col-sm-2 control-label">Name:</label>
                                         <div class="col-sm-2 form-display" ng-bind="product.name_us">
@@ -45,10 +52,10 @@
                                             <%= doc.product.category_us||''%>
                                         </div>
                                         <label class="col-sm-2 control-label">Quantity:</label>
-                                        <div class="col-sm-2 form-display" ng-bind="product.qty" ng-if="!product.infinity_flag">
+                                        <div class="col-sm-2 form-display" ng-bind="product.qty" ng-if="!product.infinity_flag" style="display: none;" remove-display-none>
                                             <%= doc.product.qty%>
                                         </div>
-                                        <div class="col-sm-2 form-display" ng-if="product.infinity_flag">
+                                        <div class="col-sm-2 form-display" ng-if="product.infinity_flag" style="display: none;" remove-display-none>
                                             Infinity
                                         </div>
                                     </div>
@@ -57,6 +64,7 @@
                                         <div class="col-sm-2 form-display" ng-bind="product.remark">
                                             <%= doc.product.remark%>
                                         </div>
+                                    </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-sm-2 col-sm-offset-8">

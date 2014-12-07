@@ -6,11 +6,12 @@ require([
     'domReady!',
     'angular',
     'app/common/params',
+    'ui/upload/directives/fileUpload',
     'landmark/angularjs/commonService',
     'landmark/angularjs/commonDirectives',
     'angular-bootstrap'
 ], function(doc, angular, params){
-    var app = angular.module('productApp', ['lm.commonService', 'lm.commonDirectives', 'ui.bootstrap']);
+    var app = angular.module('productApp', ['lm.commonService', 'lm.commonDirectives', 'ui.bootstrap', 'ui.upload']);
 
     app.controller('mainCtrl', ['$scope', '_getService', '$http',
         function($scope, _getService, $http){
@@ -47,6 +48,16 @@ require([
                 })['finally'](function(){
                     submitting = false;
                 });
+            };
+
+            $scope.uploadCallBack = function(json) {
+                if (json) {
+                    if (json.code === 0) {
+                        product.img_version = json.img_version;
+                    } else {
+                        alert('only jpg image is allowed!');
+                    }
+                }
             };
 
             var errorShow = $scope.errorShow = {};

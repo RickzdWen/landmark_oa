@@ -40,6 +40,11 @@ module.exports = {
                     return;
                 }
                 extension = self.getExtension(fileName);
+                if (opts.extension && !opts.extension.test(extension)) {
+                    file.resume();
+                    delay.reject(new CommonError('', 51005));
+                    return;
+                }
                 extension && (extension = '.' + extension);
                 var targetFileName = '';
                 if (!targetName) {
@@ -75,12 +80,13 @@ module.exports = {
                     if (typeof targetName == 'function') {
                         var newName = targetName(fields);
                         fs.rename(target, targetPath + '/' + newName + extension, function(err){
-                            cb && cb(new CommonError(err), target, fields);
+                            cb && cb(err && new CommonError(err), target, fields);
                         });
                     } else {
                         cb && cb(null, target, fields);
                     }
                 }, function(error){
+                    console.log('error!!');
                     cb && cb(error);
                 });
             });

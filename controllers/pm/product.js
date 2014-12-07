@@ -165,6 +165,48 @@ router.post('/:id/display_:name/:type', function(req, res, next){
     });
 });
 
+router.post('/upload-image/:id', function(req, res, next){
+    var id = req.params.id;
+    var fileHandler = require(ROOT_PATH + '/libs/fileHandler');
+    var fs = require('fs');
+    var targetPath = ROOT_PATH + '/public/images/products';
+    var exists = fs.existsSync(targetPath);
+    if (!exists) {
+        fs.mkdirSync(targetPath);
+    }
+    fs.lstat(targetPath, function(err, stats){
+        if (err) {
+            next(new CommonError(err));
+        } else {
+            if (!stats.isDirectory()) {
+                next(new CommonError('', 51004));
+            }
+            console.log('here');
+            fileHandler.handleImageUpload({
+                targetPath : targetPath,
+                targetName : id,
+                extension : /jpg/i
+            }, req, res, function(err, target, fields){
+                if (err) {
+                    next(err);
+                } else {
+                    var version = +new Date();
+                    ProductModel.getInstance().update({
+                        img_version : version
+                    }, 'id=?', [id]).then(function(){
+                        res.json({
+                            code : 0,
+                            img_version : version
+                        });
+                    }, function(err){
+                        next(err);
+                    });
+                }
+            });
+        }
+    });
+});
+
 function constructProductData(req) {
     var data = {};
     data.name_us = req.body.name_us;

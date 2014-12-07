@@ -14,6 +14,7 @@ module.exports = {
     51002 : 'Uploaded file too large',
     51003 : 'File not exists',
     51004 : 'Not a directory',
+    51005 : 'File extension is not allowed',
 
     60000 : 'System error'
 };

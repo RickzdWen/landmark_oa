@@ -141,6 +141,7 @@ ModelBase.prototype.update = function(data, sql, cond) {
     } else {
         sql = sql || '1<>2';
         sql = 'UPDATE ' + this.table + ' SET ' + setTmp.join(',') + ' WHERE ' + sql;
+        console.log(sql);
         pool.getConnection(function(err, connection){
             if (err) {
                 defered.reject(new CommonError(err));
