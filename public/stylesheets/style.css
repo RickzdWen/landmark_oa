@@ -273,3 +273,7 @@ div.center, p.center, img.center {
     background-color: #8BC21E;
     border-color: #8BC21E;
 }
+
+.nav-tabs>li>a {
+    cursor: pointer;
+}

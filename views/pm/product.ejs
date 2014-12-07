@@ -85,10 +85,70 @@
                                     <tab heading="Simple Chinese Description" select="selectType('feature', 'cn');"><%- doc.displayInfo.feature_cn%></tab>
                                     <tab heading="Traditional Chinese Description" select="selectType('feature', 'hk');"><%- doc.displayInfo.feature_hk%></tab>
                                 </tabset>
-                                <a ng-href="/pm/product/<%=doc.product.id%>/display_feature/{{featureType}}" class="btn btn-success btn-landmark" style="margin-top: 20px;">
-                                    <!--<i class="glyphicon glyphicon-plus icon-white"></i>-->
-                                    Edit
-                                </a>
+                                <div class="row">
+                                    <div class="col-sm-2 col-sm-offset-8">
+                                        <a ng-href="/pm/product/<%=doc.product.id%>/display_feature/{{featureType}}" class="btn btn-success btn-landmark btn-block" style="margin-top: 20px;">
+                                            <!--<i class="glyphicon glyphicon-plus icon-white"></i>-->
+                                            Edit
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="box col-sm-12">
+                        <div class="box-inner">
+                            <div class="box-header well" data-original-title="">
+                                <h2>Parameters Description</h2>
+
+                                <div class="box-icon">
+                                    <a href="javascript:void(0)" class="btn btn-minimize btn-round btn-default" ng-click="hideParameters=!hideParameters;"><i
+                                                class="glyphicon" ng-class="{'glyphicon-chevron-up':!hideParameters,'glyphicon-chevron-down':hideParameters}"></i></a>
+                                </div>
+                            </div>
+                            <div class="box-content" ng-hide="hideParameters">
+                                <tabset justified="true">
+                                    <tab heading="English Description" select="selectType('parameters', 'us');"><%- doc.displayInfo.parameters_us%></tab>
+                                    <tab heading="Simple Chinese Description" select="selectType('parameters', 'cn');"><%- doc.displayInfo.parameters_cn%></tab>
+                                    <tab heading="Traditional Chinese Description" select="selectType('parameters', 'hk');"><%- doc.displayInfo.parameters_hk%></tab>
+                                </tabset>
+                                <div class="row">
+                                    <div class="col-sm-2 col-sm-offset-8">
+                                        <a ng-href="/pm/product/<%=doc.product.id%>/display_parameters/{{parametersType}}" class="btn btn-success btn-landmark btn-block" style="margin-top: 20px;">
+                                            Edit
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="box col-sm-12">
+                        <div class="box-inner">
+                            <div class="box-header well" data-original-title="">
+                                <h2>Usage Description</h2>
+
+                                <div class="box-icon">
+                                    <a href="javascript:void(0)" class="btn btn-minimize btn-round btn-default" ng-click="hideUsage=!hideUsage;"><i
+                                                class="glyphicon" ng-class="{'glyphicon-chevron-up':!hideUsage,'glyphicon-chevron-down':hideUsage}"></i></a>
+                                </div>
+                            </div>
+                            <div class="box-content" ng-hide="hideUsage">
+                                <tabset justified="true">
+                                    <tab heading="English Description" select="selectType('usage', 'us');"><%- doc.displayInfo.usage_us%></tab>
+                                    <tab heading="Simple Chinese Description" select="selectType('usage', 'cn');"><%- doc.displayInfo.usage_cn%></tab>
+                                    <tab heading="Traditional Chinese Description" select="selectType('usage', 'hk');"><%- doc.displayInfo.usage_hk%></tab>
+                                </tabset>
+                                <div class="row">
+                                    <div class="col-sm-2 col-sm-offset-8">
+                                        <a ng-href="/pm/product/<%=doc.product.id%>/display_usage/{{usageType}}" class="btn btn-success btn-landmark btn-block" style="margin-top: 20px;">
+                                            Edit
+                                        </a>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

@@ -69,6 +69,8 @@ require([
             };
 
             $scope.featureType = 'us';
+            $scope.parametersType = 'us';
+            $scope.usageType = 'us';
             $scope.selectType = function(name, value){
                 $scope[name + 'Type'] = value;
             };
