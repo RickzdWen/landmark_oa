@@ -7,7 +7,6 @@ var ueditor = require('ueditor');
 
 module.exports = function(publicPath) {
     publicPath = publicPath || path.join(ROOT_PATH, 'public');
-    console.log(publicPath);
     return ueditor(publicPath, function(req, res, next){
         if (req.query.action === 'uploadimage') {
             var foo = req.ueditor;
