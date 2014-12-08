@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include ../common_head.ejs%>
+</head>
+<body ng-controller="mainCtrl">
+<%- include ../common_header.ejs%>
+<div class="main-container">
+    <div class="row">
+        <%- include left_nav.ejs%>
+        <div class="col-md-10 col-lg-10">
+            <div class="main-part">
+                <div class="h2">Users</div>
+                <div class="divider"></div>
+
+                <table class="table table-striped table-bordered">
+                    <thead>
+                    <tr role="row">
+                        <!--<th rowspan="1" colspan="1" >Id</th>-->
+                        <th rowspan="1" colspan="1" >ID</th>
+                        <th rowspan="1" colspan="1" >Nick</th>
+                        <th rowspan="1" colspan="1" >Email</th>
+                        <th rowspan="1" colspan="1" >Phone</th>
+                        <th rowspan="1" colspan="1" >Email Active</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                        <%doc.users.forEach(function(user, index){%>
+                        <tr class="<%if ((index+1)%2){%>even<%}else{%>odd<%}%>">
+                            <!--<td ng-bind="product.id"></td>-->
+                            <td><%=user.id%></td>
+                            <td><%=user.nick%></td>
+                            <td><%=user.email%></td>
+                            <td><%=user.phone_code%>-<%=user.phone%></td>
+                            <td><%if(user.active){%>YES<%}else{%>NO<%}%></td>
+                        </tr>
+                        <%});%>
+                    </tbody></table>
+                <div class="pull-right pagination-wrapper">
+                    <pagination total-items="pager.count" ng-model="pager.page" items-per-page="pager.size" boundary-links="true"
+                                max-size="5" rotate="false" ng-change="pageChanged()"></pagination>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script>
+    var _params = {};
+    _params.pager = <%- doc.pagerJson%>;
+</script>
+<script type="text/javascript" src="/requirejs_config.js"></script>
+<script data-main="app/cm/usersMain" src="/bower_components/requirejs/require.js"></script>
+</html>

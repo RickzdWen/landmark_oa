@@ -28,20 +28,21 @@ ModelBase.prototype.getAll = function(sql, cond, selector) {
     selector = selector || '*';
     sql = 'SELECT ' + selector + ' FROM ' + this.table + ' WHERE ' + sql;
     var defered = q.defer();
-    console.log(11);
+    var time1 = +new Date();
     pool.getConnection(function(err, connection){
+        var time2 = +new Date();
+        console.log('getConnection : ' + (time2 - time1) + 'ms');
         if (err) {
             defered.reject(new CommonError(err));
         } else {
-            console.log(22);
-            console.log(sql);
             connection.query(sql, cond, function(err, rows){
-                console.log(33);
                 console.log(sql);
+                var time3 = +new Date();
+                console.log('query : ' + (time3 - time2) + 'ms');
                 if (err) {
                     defered.reject(new CommonError(err));
                 } else {
-                    defered.resolve(rows);
+                    defered.resolve(rows || []);
                 }
                 connection.release();
 //                pool.end();
@@ -71,7 +72,7 @@ ModelBase.prototype.getByPage = function(sql, cond, selector, page, pageLimit) {
             sql = sql || '1<>2';
             sql += ' LIMIT ' + from + ',' + pageLimit;
             self.getAll(sql, cond, selector).then(function(rows){
-                ret.result = rows;
+                ret.result = rows || [];
                 defered.resolve(ret);
             }, function(err){
                 defered.reject(err);
