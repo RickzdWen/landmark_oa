@@ -126,7 +126,7 @@ router.get('/:id/display_:name/:type', function(req, res, next){
     var util = require(ROOT_PATH + '/libs/util');
     var lang = util.getLangDesc(type);
     res._view = 'pm/display_edit';
-    var nameForTitle = name.charAt(0).toUpperCase() + name.slice(1);
+    var nameForTitle = name == 'parameters' ? 'Supplement Facts' : name.charAt(0).toUpperCase() + name.slice(1);
     res.doc = {
         category : 'pm',
         nav : 'products',

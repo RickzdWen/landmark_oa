@@ -12,8 +12,8 @@ router.get('/', function(req, res, next){
         res._view = 'cm/users';
         res.doc = {
             category : 'cm',
-            nav : 'users',
-            title : 'Users'
+            nav : 'customers',
+            title : 'Customers'
         };
         var page = req.query.page || 1;
         UserModel.getInstance().getByPage('1<>2',[], '*', page).then(function(ret){
