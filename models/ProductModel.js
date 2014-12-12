@@ -23,14 +23,22 @@ var ProductModel = declare([lmBase], {
     },
 
     getNumberByCategory : function() {
+        return this._getNumberByOneKey('cid');
+    },
+
+    getNumberByBrand : function() {
+        return this._getNumberByOneKey('bid');
+    },
+
+    _getNumberByOneKey : function(key) {
         var defered = q.defer();
-        this.getAll('1<>2 GROUP BY cid', [], 'COUNT(*) AS count,cid').then(function(rows){
+        this.getAll('1<>2 GROUP BY ' + key, [], 'COUNT(*) AS count,' + key).then(function(rows){
             rows = rows || [];
             var ret = {};
             for (var i = 0, len = rows.length; i < len; ++i) {
                 var item = rows[i];
-                if (item.cid) {
-                    ret[item.cid] = item.count;
+                if (item[key]) {
+                    ret[item[key]] = item.count;
                 }
             }
             defered.resolve(ret);
@@ -41,12 +49,20 @@ var ProductModel = declare([lmBase], {
     },
 
     removeCategoryByCid : function(cid) {
-        if (!cid) {
+        return this._removeRefId('cid', cid);
+    },
+
+    removeBrandByBid : function(bid) {
+        return this._removeRefId('bid', bid);
+    },
+
+    _removeRefId : function(key, value) {
+        if (!value) {
             throw  new CommonError('', 50002);
         }
-        return this.update({
-            cid : 0
-        }, 'cid=?', [cid]);
+        var data = {};
+        data[key] = 0;
+        return this.update(data, key + '=?', [value]);
     },
 
     deleteById : function(id) {
@@ -61,6 +77,15 @@ var ProductModel = declare([lmBase], {
         if (!data.name_us || !data.name_cn || !data.name_hk) {
             throw new CommonError('', 50002);
         }
+        return this.update(data, 'id=?', [id]);
+    },
+
+    updateDisplayDesc : function(id, name, type, value) {
+        if (!id || !type || !name) {
+            throw new CommonError('', 50002);
+        }
+        var data = {};
+        data[name + '_' + type] = value;
         return this.update(data, 'id=?', [id]);
     }
 });

@@ -5,8 +5,10 @@
 var express = require('express');
 var router = express.Router();
 var ProductCategoryModel = require(ROOT_PATH + '/models/ProductCategoryModel');
+var BrandModel = require(ROOT_PATH + '/models/BrandModel');
 var ProductModel = require(ROOT_PATH + '/models/ProductModel');
-var ProductDisplayModel = require(ROOT_PATH + '/models/ProductDisplayModel');
+var SalesProductModel = require(ROOT_PATH + '/models/SalesProductModel');
+var SalesProductRelationModel = require(ROOT_PATH + '/models/SalesProductRelationModel');
 var CommonError = require(ROOT_PATH + '/libs/errors/CommonError');
 
 router.get('/', function(req, res, next){
@@ -31,12 +33,23 @@ router.get('/', function(req, res, next){
 router.post('/', function(req, res, next){
     try {
         var data = constructProductData(req);
-        ProductModel.getInstance().addNewProduct(data).then(function(ret){
-            res.doc = ret;
-            res.json(res.doc);
+        SalesProductModel.getInstance().addNewOne({}).then(function(sret){
+            data.sid = sret.insertId;
+            ProductModel.getInstance().addNewProduct(data).then(function(pret){
+                SalesProductRelationModel.getInstance().addNewRelation({
+                    pid : pret.insertId,
+                    sid : sret.insertId,
+                    qty : 1
+                }).finally(function(){
+                    res.doc = pret;
+                    res.json(res.doc);
+                });
+            }, function(err){
+                next(err);
+            });
         }, function(err){
             next(err);
-        })
+        });
     } catch (err) {
         next(err);
     }
@@ -54,12 +67,13 @@ router.get('/:id', function(req, res, next){
         q.all([
             ProductModel.getInstance().getOne('id=?', [id]),
             ProductCategoryModel.getInstance().getAllMap(),
-            ProductDisplayModel.getInstance().getOne('id=?', [id])
+            BrandModel.getInstance().getAllMap()
         ]).then(function(retArray){
             var product = retArray[0];
             if (!product) {
                 throw new CommonError('', 50004);
             }
+
             var categories = retArray[1];
             var cat = categories[product.cid];
             if (cat) {
@@ -67,22 +81,20 @@ router.get('/:id', function(req, res, next){
                 product.category_cn = cat.name_cn;
                 product.category_hk = cat.name_hk;
             }
+
+            var brands = retArray[2];
+            var brand = brands[product.bid];
+            if (brand) {
+                product.brand_us = brand.name_us;
+                product.brand_cn = brand.name_cn;
+                product.brand_hk = brand.name_hk;
+            }
             res.doc.product = product;
             res.doc.productJson = JSON.stringify(product);
             res.doc.categories = categories;
             res.doc.title = product.name_us;
 
-            var displayInfo = retArray[2];
-            res.doc.displayInfo = displayInfo || {};
-            if (!displayInfo) {
-                ProductDisplayModel.getInstance().createById(id).then(function(){
-                    res.render(res._view, res);
-                }, function(err){
-                    next(err);
-                })
-            } else {
-                res.render(res._view, res);
-            }
+            res.render(res._view, res);
         }, function(err){
             next(err);
         })
@@ -120,37 +132,35 @@ router.delete('/:id', function(req, res, next){
 });
 
 router.get('/:id/display_:name/:type', function(req, res, next){
-    var id = req.params.id;
-    var name = req.params.name;
-    var type = req.params.type;
-    var util = require(ROOT_PATH + '/libs/util');
-    var lang = util.getLangDesc(type);
-    res._view = 'pm/display_edit';
-    var nameForTitle = name == 'parameters' ? 'Supplement Facts' : name.charAt(0).toUpperCase() + name.slice(1);
-    res.doc = {
-        category : 'pm',
-        nav : 'products',
-        title : 'Edit ' + lang + ' ' + nameForTitle,
-        name : name,
-        type : type
-    };
-    var q = require('q');
-    q.all([
-        ProductModel.getInstance().getOne('id=?', [id]),
-        ProductDisplayModel.getInstance().getDescById(id, type, name)
-    ]).then(function(retArray){
-        var product = retArray[0];
-        var displayInfo = retArray[1];
-        if (!product || !displayInfo) {
-            throw new CommonError('', 50004);
-        }
-        res.doc.product = product;
-        res.doc.title += ' for ' + product.name_us;
-        res.doc.desc = displayInfo[name + '_' + type] || '';
-        res.render(res._view, res);
-    }, function(err){
+    try {
+        var id = req.params.id;
+        var name = req.params.name;
+        var type = req.params.type;
+        var util = require(ROOT_PATH + '/libs/util');
+        var lang = util.getLangDesc(type);
+        res._view = 'pm/display_edit';
+        var nameForTitle = name == 'parameters' ? 'Supplement Facts' : name.charAt(0).toUpperCase() + name.slice(1);
+        res.doc = {
+            category : 'pm',
+            nav : 'products',
+            title : 'Edit ' + lang + ' ' + nameForTitle,
+            name : name,
+            type : type
+        };
+        ProductModel.getInstance().getOne('id=?', [id]).then(function(product){
+            if (!product) {
+                throw new CommonError('', 50004);
+            }
+            res.doc.product = product;
+            res.doc.title += ' for ' + product['name_' + type];
+            res.doc.desc = product[name + '_' + type] || '';
+            res.render(res._view, res);
+        }, function(err){
+            next(err);
+        });
+    } catch (err) {
         next(err);
-    });
+    }
 });
 
 router.post('/:id/display_:name/:type', function(req, res, next){
@@ -158,7 +168,7 @@ router.post('/:id/display_:name/:type', function(req, res, next){
     var name = req.params.name;
     var type = req.params.type;
     var content = req.body.content;
-    ProductDisplayModel.getInstance().updateDescById(id, type, name, content).then(function(){
+    ProductModel.getInstance().updateDisplayDesc(id, name, type, content).then(function(){
         res.redirect('/pm/product/' + id);
     }, function(err){
         next(err);
@@ -181,7 +191,6 @@ router.post('/upload-image/:id', function(req, res, next){
             if (!stats.isDirectory()) {
                 next(new CommonError('', 51004));
             }
-            console.log('here');
             fileHandler.handleImageUpload({
                 targetPath : targetPath,
                 targetName : id,
