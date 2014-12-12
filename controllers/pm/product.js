@@ -92,6 +92,7 @@ router.get('/:id', function(req, res, next){
             res.doc.product = product;
             res.doc.productJson = JSON.stringify(product);
             res.doc.categories = categories;
+            res.doc.brands = brands;
             res.doc.title = product.name_us;
 
             res.render(res._view, res);
@@ -222,6 +223,7 @@ function constructProductData(req) {
     data.name_cn = req.body.name_cn;
     data.name_hk = req.body.name_hk;
     data.cid = req.body.cid || '';
+    data.bid = req.body.bid || '';
     data.remark = req.body.remark || '';
     data.infinity_flag = req.body.infinity_flag ? 1 : 0;
     return data;

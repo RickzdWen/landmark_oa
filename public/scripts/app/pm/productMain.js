@@ -79,6 +79,12 @@ require([
                 $scope.data.cid = cid;
             };
 
+            $scope.selectBrand = function(e, bid, name) {
+                e.preventDefault();
+                $scope.data.brand_us = name;
+                $scope.data.bid = bid;
+            };
+
             $scope.featureType = 'us';
             $scope.parametersType = 'us';
             $scope.usageType = 'us';

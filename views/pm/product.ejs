@@ -51,6 +51,10 @@
                                         <div class="col-sm-2 form-display" ng-bind="product.category_us">
                                             <%= doc.product.category_us||''%>
                                         </div>
+                                        <label class="col-sm-2 control-label">Brand:</label>
+                                        <div class="col-sm-2 form-display" ng-bind="product.brand_us">
+                                            <%= doc.product.brand_us||''%>
+                                        </div>
                                         <label class="col-sm-2 control-label">Quantity:</label>
                                         <div class="col-sm-2 form-display" ng-bind="product.qty" ng-if="!product.infinity_flag" style="display: none;" remove-display-none>
                                             <%= doc.product.qty%>
@@ -200,6 +204,19 @@
                             <ul class="dropdown-menu" role="menu">
                                 <% for(var i in doc.categories){var cat=doc.categories[i];%>
                                 <li><a href="javascript:void(0)" ng-click="selectCategory($event, <%=cat.id%>, '<%=cat.name_us%>');"><%=cat.name_us%></a></li>
+                                <%}%>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Brand:</label>
+                        <div class="form-control btn-group form-control-select" dropdown is-open="bOpened">
+                            <button type="button" class="btn dropdown-toggle">
+                                <span class="select-display-text" ng-bind="data.brand_us"></span><span class="caret pull-right"></span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu">
+                                <% for(var i in doc.brands){var brand=doc.brands[i];%>
+                                <li><a href="javascript:void(0)" ng-click="selectBrand($event, <%=brand.id%>, '<%=brand.name_us%>');"><%=brand.name_us%></a></li>
                                 <%}%>
                             </ul>
                         </div>
