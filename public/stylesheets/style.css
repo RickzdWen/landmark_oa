@@ -262,6 +262,10 @@ div.center, p.center, img.center {
 .form-control-select .btn .caret {
     margin-top: 8px;
 }
+.form-modal-body {
+    max-height: 560px;
+    overflow-y: auto;
+}
 
 .pagination-wrapper {
     margin-top: -20px;

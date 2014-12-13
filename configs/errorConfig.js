@@ -8,6 +8,7 @@ module.exports = {
     50002 : 'Parameter error',
     50003 : 'User not exists',
     50004 : 'Internal error',
+    50005 : 'Record not exists',
 
     51000 : 'Upload error',
     51001 : 'Type of file error',

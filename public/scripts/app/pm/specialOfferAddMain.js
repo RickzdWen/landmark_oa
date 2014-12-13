@@ -1,35 +1,24 @@
 /**
- * Created by Administrator on 2014/11/1.
+ * Created by Administrator on 2014/12/13.
  */
 
 require([
     'domReady!',
     'angular',
-    'app/common/params',
     'landmark/angularjs/commonService',
-    'landmark/angularjs/commonDirectives',
-    'angular-bootstrap'
-], function(doc, angular, params){
-    var app = angular.module('productAddApp', ['lm.commonService', 'lm.commonDirectives', 'ui.bootstrap']);
+    'landmark/angularjs/commonDirectives'
+], function(doc, angular){
+    var app = angular.module('specialOfferAddApp', ['lm.commonService', 'lm.commonDirectives']);
 
     app.controller('mainCtrl', ['$scope', '_getService', '$http',
         function($scope, _getService, $http){
-            var product = $scope.product = {};
-
-            $scope.selectCategory = function(e, cid, name) {
-                $scope.categoryName = name;
-                product.cid = cid;
-            };
-
-            $scope.selectBrand = function(e, bid, name) {
-                $scope.brandName = name;
-                product.bid = bid;
-            };
+            var offer = $scope.offer = {};
 
             var errorShow = $scope.errorShow = {
-                'name_us' : false,
-                'name_cn' : false,
-                'name_hk' : false
+                'title_us' : false,
+                'title_cn' : false,
+                'title_hk' : false,
+                'discount' : false
             };
             $scope.valid = function(name) {
                 errorShow[name] = true;
@@ -42,12 +31,12 @@ require([
                     return;
                 }
                 showAllError();
-                if (!product.name_us || !product.name_cn || !product.name_hk) {
+                if (!offer.title_us || !offer.title_cn || !offer.title_hk || !offer.discount) {
                     return;
                 }
                 submitting = true;
-                _getService($http.post('/pm/product', product)).then(function(ret){
-                    window.location.href = '/pm/products';
+                _getService($http.post('/pm/special_offer', offer)).then(function(ret){
+                    window.location.href = '/pm/special_offer/' + ret.insertId;
                 }, function(error){
                     alert(error);
                 })['finally'](function(){
@@ -60,6 +49,6 @@ require([
                     errorShow[i] = true;
                 }
             }
-    }]);
-    angular.bootstrap(doc, ['productAddApp']);
+        }]);
+    angular.bootstrap(doc, ['specialOfferAddApp']);
 });

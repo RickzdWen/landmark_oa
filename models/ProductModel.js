@@ -22,6 +22,10 @@ var ProductModel = declare([lmBase], {
         return this.create(data);
     },
 
+    getAllExistProduct : function() {
+        return this.getAll('deleted=?', [0]);
+    },
+
     getNumberByCategory : function() {
         return this._getNumberByOneKey('cid');
     },
@@ -32,7 +36,7 @@ var ProductModel = declare([lmBase], {
 
     _getNumberByOneKey : function(key) {
         var defered = q.defer();
-        this.getAll('1<>2 GROUP BY ' + key, [], 'COUNT(*) AS count,' + key).then(function(rows){
+        this.getAll('deleted=? GROUP BY ' + key, [0], 'COUNT(*) AS count,' + key).then(function(rows){
             rows = rows || [];
             var ret = {};
             for (var i = 0, len = rows.length; i < len; ++i) {
@@ -69,7 +73,9 @@ var ProductModel = declare([lmBase], {
         if (!id) {
             throw new CommonError('', 50002);
         }
-        return this.delete('id=?', [id]);
+        return this.update({
+            deleted : 1
+        }, 'id=?', [id]);
     },
 
     updateById : function(data, id) {
@@ -87,6 +93,17 @@ var ProductModel = declare([lmBase], {
         var data = {};
         data[name + '_' + type] = value;
         return this.update(data, 'id=?', [id]);
+    },
+
+    getAllMap : function() {
+        var defered = require('q').defer();
+        var self = this;
+        this.getAllExistProduct().then(function(rows){
+            defered.resolve(self.getMap(rows, 'id'));
+        }, function(err){
+            defered.reject(err);
+        });
+        return defered.promise;
     }
 });
 

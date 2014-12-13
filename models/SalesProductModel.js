@@ -17,6 +17,19 @@ var SalesProductModel = declare([lmBase], {
         data = data || {};
         data.created = moment().format('YYYY-MM-DD HH:mm:ss');
         return this.create(data);
+    },
+
+    getAllExistSpecialOffers : function() {
+        return this.getAll('special_offer=? AND deleted=?', [1, 0]);
+    },
+
+    deleteById : function(id) {
+        if (!id) {
+            throw new CommonError('', 50002);
+        }
+        return this.update({
+            deleted : 1
+        }, 'id=?', [id]);
     }
 });
 

@@ -8,20 +8,19 @@ var ProductCategoryModel = require(ROOT_PATH + '/models/ProductCategoryModel');
 var BrandModel = require(ROOT_PATH + '/models/BrandModel');
 var ProductModel = require(ROOT_PATH + '/models/ProductModel');
 var CommonError = require(ROOT_PATH + '/libs/errors/CommonError');
-var utlil = require(ROOT_PATH + '/libs/util');
 
 router.get('/', function(req, res, next){
     try {
         var page = req.query.page || 1;
-        var size = req.query.size || 20;
+//        var size = req.query.size || 20;
         var of = req.query.of;
-        var name = req.query.name;
-        var cid = req.query.cid;
-        var bid = req.query.bid;
+        var name = req.query.name || '';
+        var cid = req.query.cid || '';
+        var bid = req.query.bid || '';
         if (!of) {
             res._view = 'pm/products';
         }
-        var sql = '1<>2';
+        var sql = 'deleted=0';
         var cond = [];
         if (name) {
             sql += ' AND (name_us LIKE ? OR name_hk LIKE ? OR name_cn LIKE ?)';
@@ -42,9 +41,14 @@ router.get('/', function(req, res, next){
             nav : 'products',
             title : 'Products'
         };
+        var search = {
+            name : name,
+            cid : cid,
+            bid : bid
+        };
         var q = require('q');
         q.all([
-            ProductModel.getInstance().getByPage(sql, cond, '*', page, size),
+            ProductModel.getInstance().getByPage(sql, cond, '*', page, 20),
             ProductCategoryModel.getInstance().getAllMap(),
             BrandModel.getInstance().getAllMap()
         ]).then(function(resArray){
@@ -66,11 +70,17 @@ router.get('/', function(req, res, next){
                     item.brand_cn = bItem.name_cn;
                     item.brand_hk = bItem.name_hk;
                 }
+                item.price = +(item.price / 1000).toFixed(2);
             }
             res.doc.products = pRet;
             res.doc.categories = categories;
+            res.doc.brands = brands;
+            search.categoryName = cid && categories[cid].name_us;
+            search.brandName = bid && brands[bid].name_us;
+            res.doc.search = search;
             if (res._view) {
                 res.doc.productsJson = JSON.stringify(pRet);
+                res.doc.searchJson = JSON.stringify(search);
                 res.render(res._view, res);
             } else {
                 res.json(res.doc);

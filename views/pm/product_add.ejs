@@ -45,6 +45,19 @@
                             </div>
                         </div>
                         <div class="form-group col-sm-4">
+                            <label>Brand:</label>
+                            <div class="form-control btn-group form-control-select" dropdown is-open="bOpened">
+                                <button type="button" class="btn dropdown-toggle">
+                                    <span class="select-display-text" ng-bind="brandName"></span><span class="caret pull-right"></span>
+                                </button>
+                                <ul class="dropdown-menu" role="menu">
+                                    <% for(var i = 0, len=doc.brands.length; i < len; ++i){var brand=doc.brands[i];%>
+                                    <li><a href="javascript:void(0)" ng-click="selectBrand($event, <%=brand.id%>, '<%=brand.name_us%>');"><%=brand.name_us%></a></li>
+                                    <%}%>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-4">
                             <div class="checkbox" style="padding-top: 20px;">
                                 <label>
                                     <input type="checkbox" ng-model="product.infinity_flag"> Infinity Quantity

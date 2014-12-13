@@ -45,8 +45,30 @@ require([
             };
 
             $scope.pageChanged = function() {
-                window.location.href = '/pm/products?page=' + pager.page;
+                window.location.href = getReqUrl() + '&page=' + pager.page;
             };
+
+            var search = $scope.search = params.search;
+            $scope.selectCategory = function(e, cid, name) {
+                search.categoryName = name;
+                search.cid = cid;
+            };
+            $scope.selectBrand = function(e, bid, name) {
+                search.brandName = name;
+                search.bid = bid;
+            };
+            $scope.submitSearch = function(e) {
+                e.preventDefault();
+                window.location.href = getReqUrl();
+            };
+
+            function getReqUrl() {
+                var s = [];
+                s.push('name=' + search.name || '');
+                s.push('cid=' + search.cid || '');
+                s.push('bid=' + search.bid || '');
+                return '/pm/products?' + s.join('&');
+            }
     }]);
 
     angular.bootstrap(doc, ['productsApp']);

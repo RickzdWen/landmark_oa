@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include ../common_head.ejs%>
+</head>
+<body ng-controller="mainCtrl">
+<%- include ../common_header.ejs%>
+<div class="main-container">
+    <div class="row">
+        <%- include left_nav.ejs%>
+        <div class="col-md-10 col-lg-10">
+            <div class="main-part">
+                <div class="h2" ng-bind="offer.title_us"><%=doc.title%></div>
+                <div class="divider"></div>
+                <div class="row">
+                    <div class="box col-sm-12">
+                        <div class="box-inner">
+                            <div class="box-header well" data-original-title="">
+                                <h2>Basic Information</h2>
+
+                                <div class="box-icon">
+                                    <a href="javascript:void(0)" class="btn btn-minimize btn-round btn-default" ng-click="hideBasic=!hideBasic;"><i
+                                                class="glyphicon" ng-class="{'glyphicon-chevron-up':!hideBasic,'glyphicon-chevron-down':hideBasic}"></i></a>
+                                </div>
+                            </div>
+                            <div class="box-content" ng-hide="hideBasic">
+                                <form class="form-horizontal" role="form">
+                                    <div class="col-sm-2">
+                                        <div class="row center">
+                                            <img ng-src="/images/special_offers/<%= doc.offer.id%>.jpg?v={{offer.img_version}}" width="50%" height="50%">
+                                            <div class="btn-upload-wrap"><span lmp-file-upload data-upload-url="/pm/special_offer/upload-image/<%= doc.offer.id%>" upload-call-back="uploadCallBack"></span></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-10">
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label">Title:</label>
+                                            <div class="col-sm-2 form-display" ng-bind="offer.title_us">
+                                                <%= doc.offer.title_us%>
+                                            </div>
+                                            <label class="col-sm-2 control-label">Simple Chinese Title:</label>
+                                            <div class="col-sm-2 form-display" ng-bind="offer.title_cn">
+                                                <%= doc.offer.title_cn%>
+                                            </div>
+                                            <label class="col-sm-2 control-label">Traditional Chinese Title:</label>
+                                            <div class="col-sm-2 form-display" ng-bind="offer.title_hk">
+                                                <%= doc.offer.title_hk%>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label">Discount:</label>
+                                            <div class="col-sm-2 form-display" ng-bind="offer.discount">
+                                                <%= doc.offer.discount||''%>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label">Remark:</label>
+                                            <div class="col-sm-2 form-display" ng-bind="offer.remark">
+                                                <%= doc.offer.remark%>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-2 col-sm-offset-8">
+                                            <button class="btn btn-success btn-landmark btn-block" ng-click="showEdit($event);">Edit</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="box col-sm-12">
+                        <div class="box-inner">
+                            <div class="box-header well" data-original-title="">
+                                <h2>Description</h2>
+
+                                <div class="box-icon">
+                                    <a href="javascript:void(0)" class="btn btn-minimize btn-round btn-default" ng-click="hideDesc=!hideDesc;"><i
+                                                class="glyphicon" ng-class="{'glyphicon-chevron-up':!hideDesc,'glyphicon-chevron-down':hideDesc}"></i></a>
+                                </div>
+                            </div>
+                            <div class="box-content" ng-hide="hideDesc">
+                                <tabset justified="true">
+                                    <tab heading="English Description" select="selectType('desc', 'us');"><%- doc.offer.desc_us%></tab>
+                                    <tab heading="Simple Chinese Description" select="selectType('desc', 'cn');"><%- doc.offer.desc_cn%></tab>
+                                    <tab heading="Traditional Chinese Description" select="selectType('desc', 'hk');"><%- doc.offer.desc_hk%></tab>
+                                </tabset>
+                                <div class="row">
+                                    <div class="col-sm-2 col-sm-offset-8">
+                                        <a ng-href="/pm/special_offer/<%=doc.offer.id%>/desc/{{featureType}}" class="btn btn-success btn-landmark btn-block" style="margin-top: 20px;">
+                                            Edit
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true" lm-modal data-pass-data="editModalData">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" ng-click="editModalData.show=false;">×</button>
+                <h3 class="lmp-color">Modify Basic Information</h3>
+            </div>
+            <div class="modal-body form-modal-body">
+                <form role="form">
+                    <div class="form-group" ng-class="{'has-error':errorShow.title_us&&!data.title_us}">
+                        <label for="title_us">Title</label>
+                        <input type="text" class="form-control" id="title_us" placeholder="english"
+                               ng-model="data.title_us" ng-blur="valid('title_us');">
+                    </div>
+                    <div class="form-group" ng-class="{'has-error':errorShow.title_cn&&!data.title_cn}">
+                        <label for="title_cn">Simple Chinese Title</label>
+                        <input type="text" class="form-control" id="title_cn" placeholder="simple chinese"
+                               ng-model="data.title_cn" ng-blur="valid('title_cn');">
+                    </div>
+                    <div class="form-group" ng-class="{'has-error':errorShow.title_hk&&!data.title_hk}">
+                        <label for="title_hk">Traditional Chinese Title</label>
+                        <input type="text" class="form-control" id="title_hk" placeholder="traditional chinese"
+                               ng-model="data.title_hk" ng-blur="valid('title_hk');">
+                    </div>
+                    <div class="form-group" ng-class="{'has-error':errorShow.discount&&(!data.discount||isNaN(data.discount))}">
+                        <label for="discount">Discount</label>
+                        <input type="text" class="form-control" id="discount" ng-model="data.discount" ng-blur="valid('discount')">
+                    </div>
+                    <div class="form-group">
+                        <label for="remark">Remark</label>
+                        <textarea class="form-control" rows="3" id="remark" placeholder="remark if any" ng-model="data.remark"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <a href="javascript:void(0)" class="btn btn-default" ng-click="editModalData.show=false;">Close</a>
+                <a href="javascript:void(0)" class="btn btn-primary btn-landmark" ng-click="modify($event);">Modify</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include ../common_footer.ejs%>
+</body>
+<script>
+    var _params = {};
+    _params.offer = <%- doc.offerJson%>;
+    _params.plist = <%- doc.relationsJson%>;
+</script>
+<script type="text/javascript" src="/requirejs_config.js"></script>
+<script data-main="app/pm/specialOfferMain" src="/bower_components/requirejs/require.js"></script>
+</html>

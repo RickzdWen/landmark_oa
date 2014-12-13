@@ -19,8 +19,13 @@ router.get('/', function(req, res, next){
             title : 'Add New Product'
         };
         res._view = 'pm/product_add';
-        ProductCategoryModel.getInstance().getAll().then(function(rows){
-            res.doc.categories = rows;
+        var q = require('q');
+        q.all([
+            ProductCategoryModel.getInstance().getAll(),
+            BrandModel.getInstance().getAll()
+        ]).then(function(retArray){
+            res.doc.categories = retArray[0];
+            res.doc.brands = retArray[1];
             res.render(res._view, res);
         }, function(err){
             next(err);
@@ -33,7 +38,9 @@ router.get('/', function(req, res, next){
 router.post('/', function(req, res, next){
     try {
         var data = constructProductData(req);
-        SalesProductModel.getInstance().addNewOne({}).then(function(sret){
+        SalesProductModel.getInstance().addNewOne({
+            discount : 100
+        }).then(function(sret){
             data.sid = sret.insertId;
             ProductModel.getInstance().addNewProduct(data).then(function(pret){
                 SalesProductRelationModel.getInstance().addNewRelation({
@@ -89,6 +96,7 @@ router.get('/:id', function(req, res, next){
                 product.brand_cn = brand.name_cn;
                 product.brand_hk = brand.name_hk;
             }
+            product.price = +(product.price / 1000).toFixed(2);
             res.doc.product = product;
             res.doc.productJson = JSON.stringify(product);
             res.doc.categories = categories;
@@ -226,6 +234,7 @@ function constructProductData(req) {
     data.bid = req.body.bid || '';
     data.remark = req.body.remark || '';
     data.infinity_flag = req.body.infinity_flag ? 1 : 0;
+    data.price = +((req.body.price || 0) * 1000).toFixed(0);
     return data;
 }
 
