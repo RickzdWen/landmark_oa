@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include ../common_head.ejs%>
+    <script type="text/javascript" charset="utf-8" src="/ueditor/ueditor.config.js"></script>
+    <script type="text/javascript" charset="utf-8" src="/ueditor/ueditor.all.min.js"> </script>
+</head>
+<body>
+<%- include ../common_header.ejs%>
+<div class="main-container">
+    <div class="row">
+        <%- include left_nav.ejs%>
+        <div class="col-md-10 col-lg-10">
+            <div class="main-part">
+                <div class="h2"><%=doc.title%></div>
+                <div class="divider"></div>
+                <form role="form" action="/pm/special_offer/<%=doc.offer.id%>/<%=doc.name%>/<%=doc.type%>" method="post">
+                    <div class="row">
+                        <script id="editor" type="text/plain" name="content" style="width:98%;height:500px;"><%- doc.desc%></script>
+                    </div>
+                    <div class="row" style="margin-top: 25px;">
+                        <div class="col-sm-2 col-sm-offset-8">
+                            <button class="btn btn-success btn-landmark btn-block" type="submit">Save</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<%- include ../common_footer.ejs%>
+</body>
+
+<script type="text/javascript">
+    var ue = UE.getEditor('editor');
+</script>
+</html>

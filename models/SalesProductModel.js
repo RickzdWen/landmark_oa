@@ -30,6 +30,15 @@ var SalesProductModel = declare([lmBase], {
         return this.update({
             deleted : 1
         }, 'id=?', [id]);
+    },
+
+    updateDesc : function(id, name, type, value) {
+        if (!id || !type || !name) {
+            throw new CommonError('', 50002);
+        }
+        var data = {};
+        data[name + '_' + type] = value;
+        return this.update(data, 'id=?', [id]);
     }
 });
 

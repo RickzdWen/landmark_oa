@@ -23,6 +23,15 @@ require([
             $scope.valid = function(name) {
                 errorShow[name] = true;
             };
+            $scope.discountValid = false;
+            $scope.$watch('offer.discount', function(discount){
+                discount += '';
+                if (!discount || isNaN(discount)) {
+                    $scope.discountValid = false;
+                } else {
+                    $scope.discountValid = true;
+                }
+            });
 
             var submitting = false;
             $scope.submit = function(e) {
@@ -31,7 +40,7 @@ require([
                     return;
                 }
                 showAllError();
-                if (!offer.title_us || !offer.title_cn || !offer.title_hk || !offer.discount) {
+                if (!offer.title_us || !offer.title_cn || !offer.title_hk || !$scope.discountValid) {
                     return;
                 }
                 submitting = true;
