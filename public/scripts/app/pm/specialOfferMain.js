@@ -89,7 +89,6 @@ require([
                 var item = plist[i];
                 plistMap[item.pid] = 1;
             }
-            console.log(plistMap);
             var relationData = $scope.relationData = {
                 sid : offer.id
             };

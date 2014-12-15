@@ -4,6 +4,7 @@
 var poolManager = require('./poolManager');
 var CommonError = require(ROOT_PATH + '/libs/errors/CommonError');
 var q = require('q');
+var moment = require('moment');
 
 function ModelBase() {
 
@@ -197,6 +198,11 @@ ModelBase.prototype.getMap = function(rows, key) {
         map[item[key]] = item;
     }
     return map;
+};
+
+ModelBase.prototype.createOneWithTime = function(data) {
+    data.created = moment().format('YYYY-MM-DD HH:mm:ss');
+    return this.create(data);
 };
 
 module.exports = ModelBase;
