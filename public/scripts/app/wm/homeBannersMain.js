@@ -22,9 +22,16 @@ require([
             $scope.locale = 'us';
 
             $scope.selectLocale = function(locale){
-                console.log(locale);
                 $scope.locale = locale;
                 $scope.list = $scope[locale + 'List'];
+            };
+
+            $scope.uploadCallBack = function(json, index) {
+                var item = $scope.list[index];
+                if (json && json.code === 0 && item) {
+                    item.image_version = json.img_version;
+                    item.extension = json.extension;
+                }
             };
 
             $scope.addNewOne = function() {

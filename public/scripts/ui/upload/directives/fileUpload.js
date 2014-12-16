@@ -20,6 +20,7 @@ define([
                 iframeName : '@',
                 uploadUrl : '@',
                 accept : '@',
+                index : '@',
                 customizedInputs : '=',
                 uploadCallBack : '=',
                 customizedInputs : '='

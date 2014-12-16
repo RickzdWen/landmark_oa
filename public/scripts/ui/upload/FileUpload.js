@@ -57,7 +57,7 @@ define([
                     if (node && node.nodeType == 3) {
                         json = $.parseJSON(node.parentNode.innerText);
                     }
-                    scope.uploadCallBack && scope.uploadCallBack(json, self);
+                    scope.uploadCallBack && scope.uploadCallBack(json, scope.index);
                 });
             }
             if (iframeNode.attachEvent) {

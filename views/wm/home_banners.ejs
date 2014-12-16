@@ -38,7 +38,7 @@
                             <td><input name="title" ng-model="item.title" class="form-control"></td>
                             <td><input name="sub_title" ng-model="item.sub_title" class="form-control"></td>
                             <td><input name="sub_title" ng-model="item.label" class="form-control"></td>
-                            <td><div class="btn-upload-wrap"><span lmp-file-upload data-upload-url="/wm/home_banner/upload-image" upload-call-back="uploadCallBack" iframe-name="item.id"></span></div></td>
+                            <td><div class="btn-upload-wrap"><span lmp-file-upload data-upload-url="/wm/home_banner/upload-image" upload-call-back="uploadCallBack" data-index="$index" data-iframe-name="item.id"></span></div></td>
                             <td><input name="target" ng-model="item.target" class="form-control"></td>
                             <td><input type="checkbox" ng-model="item.open_new" ng-checked="item.open_new"></td>
                             <td><span class="glyphicon" ng-class="{'glyphicon-ok':item.display,'glyphicon-remove':!item.display}"></span></td>
