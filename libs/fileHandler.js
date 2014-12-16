@@ -40,12 +40,12 @@ module.exports = {
                     return;
                 }
                 extension = self.getExtension(fileName);
-                if (opts.extension && !opts.extension.test(extension)) {
+                if ((opts.extension && !opts.extension.test(extension)) || !extension) {
                     file.resume();
                     delay.reject(new CommonError('', 51005));
                     return;
                 }
-                extension && (extension = '.' + extension);
+                extension = '.' + extension;
                 var targetFileName = '';
                 if (!targetName) {
                     targetFileName = fileName
@@ -79,11 +79,12 @@ module.exports = {
                 delay.promise.then(function(){
                     if (typeof targetName == 'function') {
                         var newName = targetName(fields);
-                        fs.rename(target, targetPath + '/' + newName + extension, function(err){
-                            cb && cb(err && new CommonError(err), target, fields);
+                        var newTarget = targetPath + '/' + newName + extension;
+                        fs.rename(target, newTarget, function(err){
+                            cb && cb(err && new CommonError(err), newTarget, fields, extension.substr(1));
                         });
                     } else {
-                        cb && cb(null, target, fields);
+                        cb && cb(null, target, fields, extension.substr(1));
                     }
                 }, function(error){
                     console.log('error!!');
