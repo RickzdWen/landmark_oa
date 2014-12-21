@@ -22,12 +22,29 @@ router.post('/', function(req, res, next){
     }
 });
 
+router.put('/:id', function(req, res, next){
+    try {
+        var id = req.params.id;
+        var data = constructFormData(req);
+        delete data.id;
+        HomeBannerModel.getInstance().update(data, 'id=?', [id]).then(function(){
+            res.json({
+                code : 0
+            });
+        }, function(err) {
+            next(err);
+        });
+    } catch (err) {
+        next(err);
+    }
+});
+
 router.post('/upload-image/:id', function(req, res, next){
     try {
         var id = req.params.id;
         var fileHandler = require(ROOT_PATH + '/libs/fileHandler');
         var fs = require('fs');
-        var targetPath = ROOT_PATH + '/public/images/products';
+        var targetPath = require(ROOT_PATH + '/configs/commonConfig').HOME_BANNER_IMGS_PATH;
         var exists = fs.existsSync(targetPath);
         if (!exists) {
             fs.mkdirSync(targetPath);
@@ -69,8 +86,16 @@ router.post('/upload-image/:id', function(req, res, next){
 });
 
 function constructFormData(req) {
-    var data = req.body || {};
-    data.display = data.display ? 1 : 0;
+    var extend = require('extend');
+    var data = extend({}, req.body);
+    delete data.created;
+    delete data.updated;
+    if (typeof data.display !== 'undefined') {
+        data.display = data.display ? 1 : 0;
+    }
+    if (typeof data.open_new !== 'undefined') {
+        data.open_new = data.open_new ? 1 : 0;
+    }
     return data;
 }
 

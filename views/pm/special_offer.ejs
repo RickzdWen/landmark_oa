@@ -24,6 +24,7 @@
                                 </div>
                             </div>
                             <div class="box-content" ng-hide="hideBasic">
+                                <div class="row">
                                 <form class="form-horizontal" role="form">
                                     <div class="col-sm-2">
                                         <div class="row center">
@@ -59,12 +60,18 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="row">
-                                        <div class="col-sm-2 col-sm-offset-8">
-                                            <button class="btn btn-success btn-landmark btn-block" ng-click="showEdit($event);">Edit</button>
-                                        </div>
-                                    </div>
                                 </form>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-2 col-sm-offset-8">
+                                        <button class="btn btn-success btn-landmark btn-block" ng-click="showEdit($event);">Edit</button>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <button class="btn btn-success btn-landmark btn-block" ng-click="togglePublished($event, offer);">
+                                            <span ng-if="!offer.published">Publish</span><span ng-if="offer.published">UnPublish</span>
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

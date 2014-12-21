@@ -79,6 +79,7 @@
                         <th rowspan="1" colspan="1" >Category</th>
                         <th rowspan="1" colspan="1" >Brand</th>
                         <th rowspan="1" colspan="1" >Quantity</th>
+                        <th rowspan="1" colspan="1" >Published</th>
                         <th rowspan="1" colspan="1" >Remark</th>
                         <th rowspan="1" colspan="1" >Actions</th>
                     </tr>
@@ -93,11 +94,16 @@
                         <td ng-bind="product.category_us"></td>
                         <td ng-bind="product.brand_us"></td>
                         <td><span ng-bind="product.qty" ng-if="!product.infinity_flag"></span><span ng-if="product.infinity_flag">Infinity</span></td>
+                        <td style="text-align: center;"><span class="glyphicon" ng-class="{'glyphicon-ok green':product.published,'glyphicon-remove red':!product.published}"></span></td>
                         <td ng-bind="product.remark"></td>
                         <td>
                             <a class="btn btn-success" ng-href="/pm/product/{{product.id}}">
                                 <i class="glyphicon glyphicon-zoom-in icon-white"></i>
                                 View
+                            </a>
+                            <a class="btn btn-info" href="javascript:void(0)" ng-click="togglePublished($event, product);">
+                                <i class="glyphicon icon-white" ng-class="{'glyphicon-ok':!product.published,'glyphicon-remove':product.published}"></i>
+                                <span ng-if="!product.published">Publish</span><span ng-if="product.published">UnPublish</span>
                             </a>
                             <a class="btn btn-danger" href="javascript:void(0)" ng-click="showDelete($event, $index);">
                                 <i class="glyphicon glyphicon-trash icon-white"></i>

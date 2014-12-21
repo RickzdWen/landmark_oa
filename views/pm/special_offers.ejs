@@ -31,12 +31,16 @@
                         <td ng-bind="offer.title_cn"></td>
                         <td ng-bind="offer.title_hk"></td>
                         <td>{{offer.discount}}%</td>
-                        <td><span ng-if="offer.published">YES</span><span ng-if="!offer.published">NO</span></td>
+                        <td style="text-align: center;"><span class="glyphicon" ng-class="{'glyphicon-ok green':offer.published,'glyphicon-remove red':!offer.published}"></span></td>
                         <td ng-bind="offer.remark"></td>
                         <td>
                             <a class="btn btn-success" href="javascript:void(0)" ng-href="/pm/special_offer/{{offer.id}}">
                                 <i class="glyphicon glyphicon-zoom-in icon-white"></i>
                                 View
+                            </a>
+                            <a class="btn btn-info" href="javascript:void(0)" ng-click="togglePublished($event, offer);">
+                                <i class="glyphicon icon-white" ng-class="{'glyphicon-ok':!offer.published,'glyphicon-remove':offer.published}"></i>
+                                <span ng-if="!offer.published">Publish</span><span ng-if="offer.published">UnPublish</span>
                             </a>
                             <a class="btn btn-danger" href="javascript:void(0)" ng-click="showDelete($event, $index);">
                                 <i class="glyphicon glyphicon-trash icon-white"></i>

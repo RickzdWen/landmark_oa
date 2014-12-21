@@ -28,6 +28,23 @@ require([
                 editModalData.show = true;
             };
 
+            $scope.togglePublished = function(e, product) {
+                e.preventDefault();
+                if (submitting) {
+                    return;
+                }
+                submitting = true;
+                _getService($http.put('/pm/product/published/' + product.id, {
+                    published : !product.published
+                })).then(function(){
+                    product.published = !product.published;
+                }, function(error){
+                    alert(error);
+                })['finally'](function(){
+                    submitting = false;
+                });
+            };
+
             var submitting = false;
             $scope.modify = function(e) {
                 e && e.preventDefault();

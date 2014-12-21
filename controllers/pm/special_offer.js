@@ -96,6 +96,22 @@ router.put('/:id', function(req, res, next){
     }
 });
 
+router.put('/published/:id', function(req, res, next){
+    try {
+        var id = req.params.id;
+        var published = req.body.published ? 1 : 0;
+        SalesProductModel.getInstance().update({
+            published : published
+        }, 'id=?', [id]).then(function(){
+            res.json({code : 0});
+        }, function(err){
+            next(err);
+        });
+    } catch (err) {
+        next(err);
+    }
+});
+
 router.delete('/:id', function(req, res, next){
     try {
         var id = req.params.id;

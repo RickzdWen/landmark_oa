@@ -38,6 +38,23 @@ require([
                 }
             });
 
+            $scope.togglePublished = function(e, offer) {
+                e.preventDefault();
+                if (submitting) {
+                    return;
+                }
+                submitting = true;
+                _getService($http.put('/pm/special_offer/published/' + offer.id, {
+                    published : !offer.published
+                })).then(function(){
+                    offer.published = !offer.published;
+                }, function(error){
+                    alert(error);
+                })['finally'](function(){
+                    submitting = false;
+                });
+            };
+
             var submitting = false;
             $scope.modify = function(e) {
                 e && e.preventDefault();
