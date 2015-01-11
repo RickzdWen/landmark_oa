@@ -20,6 +20,7 @@
                         <th rowspan="1" colspan="1" >Simple Chinese Title</th>
                         <th rowspan="1" colspan="1" >Traditional Chinese Title</th>
                         <th rowspan="1" colspan="1" >Discount</th>
+                        <th rowspan="1" colspan="1" >Price</th>
                         <th rowspan="1" colspan="1" >Published</th>
                         <th rowspan="1" colspan="1" >Remark</th>
                         <th rowspan="1" colspan="1" >Actions</th>
@@ -31,6 +32,7 @@
                         <td ng-bind="offer.title_cn"></td>
                         <td ng-bind="offer.title_hk"></td>
                         <td>{{offer.discount}}%</td>
+                        <td>{{offer.price}}</td>
                         <td style="text-align: center;"><span class="glyphicon" ng-class="{'glyphicon-ok green':offer.published,'glyphicon-remove red':!offer.published}"></span></td>
                         <td ng-bind="offer.remark"></td>
                         <td>
@@ -48,7 +50,7 @@
                             </a>
                         </td>
                     </tr></tbody></table>
-                <a href="/pm/special_offer_add" class="btn btn-success btn-landmark">
+                <a href="/pm/special_offer" class="btn btn-success btn-landmark">
                     <i class="glyphicon glyphicon-plus icon-white"></i>
                     Add New offer
                 </a>

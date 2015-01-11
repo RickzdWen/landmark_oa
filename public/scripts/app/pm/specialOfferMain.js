@@ -38,6 +38,16 @@ require([
                 }
             });
 
+            $scope.priceValid = false;
+            $scope.$watch('data.price', function(price){
+                price += '';
+                if (!price || isNaN(price)) {
+                    $scope.priceValid = false;
+                } else {
+                    $scope.priceValid = true;
+                }
+            });
+
             $scope.togglePublished = function(e, offer) {
                 e.preventDefault();
                 if (submitting) {
@@ -63,7 +73,7 @@ require([
                 }
                 setErrorShow();
                 var data = $scope.data;
-                if (!data.title_us || !data.title_cn || !data.title_hk || !$scope.discountValid) {
+                if (!data.title_us || !data.title_cn || !data.title_hk || !$scope.discountValid || !$scope.priceValid) {
                     return;
                 }
                 submitting = true;
@@ -93,11 +103,11 @@ require([
             };
 
             function resetErrorShow() {
-                errorShow.title_us = errorShow.title_cn = errorShow.title_hk = errorShow.discount = false;
+                errorShow.title_us = errorShow.title_cn = errorShow.title_hk = errorShow.discount = errorShow.price = false;
             }
 
             function setErrorShow() {
-                errorShow.title_us = errorShow.title_cn = errorShow.title_hk = errorShow.discount = true;
+                errorShow.title_us = errorShow.title_cn = errorShow.title_hk = errorShow.discount = errorShow.price = true;
             }
 
             var plist = $scope.plist = params.plist;

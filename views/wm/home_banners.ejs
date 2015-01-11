@@ -24,6 +24,8 @@
                         <th rowspan="1" colspan="1" >Title</th>
                         <th rowspan="1" colspan="1" >Sub Title</th>
                         <th rowspan="1" colspan="1" >Label</th>
+                        <th rowspan="1" colspan="1" >x</th>
+                        <th rowspan="1" colspan="1" >y</th>
                         <th rowspan="1" colspan="1" >Image</th>
                         <th rowspan="1" colspan="1" >Target Url</th>
                         <th rowspan="1" colspan="1" >Open New</th>
@@ -38,6 +40,8 @@
                             <td><input name="title" ng-model="item.title" class="form-control"></td>
                             <td><input name="sub_title" ng-model="item.sub_title" class="form-control"></td>
                             <td><input name="sub_title" ng-model="item.label" class="form-control"></td>
+                            <td><input name="coordx" ng-model="item.coordx" class="form-control"></td>
+                            <td><input name="coordy" ng-model="item.coordy" class="form-control"></td>
                             <td><a ng-href="/images/home_banners/{{item.id}}.{{item.extension}}?v={{item.img_version}}" target="_blank" ng-if="item.img_version">View</a><div class="btn-upload-wrap"><span lmp-file-upload data-upload-url="/wm/home_banner/upload-image/{{item.id}}" upload-call-back="uploadCallBack" data-index="{{$index}}" data-iframe-name="{{item.id}}"></span></div></td>
                             <td><input name="target" ng-model="item.target" class="form-control"></td>
                             <td><input type="checkbox" ng-model="item.open_new" ng-checked="item.open_new"></td>

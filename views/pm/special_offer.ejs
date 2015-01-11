@@ -52,6 +52,10 @@
                                             <div class="col-sm-2 form-display">
                                                 <span ng-bind="offer.discount"><%= doc.offer.discount||''%></span>%
                                             </div>
+                                            <label class="col-sm-2 control-label">Price(USD):</label>
+                                            <div class="col-sm-2 form-display">
+                                                <span ng-bind="offer.price"><%= doc.offer.price%></span>
+                                            </div>
                                         </div>
                                         <div class="form-group">
                                             <label class="col-sm-2 control-label">Remark:</label>
@@ -201,6 +205,10 @@
                     <div class="form-group" ng-class="{'has-error':errorShow.discount&&!discountValid}">
                         <label for="discount">Discount</label>
                         <input type="text" class="form-control" id="discount" ng-model="data.discount" ng-blur="valid('discount')">
+                    </div>
+                    <div class="form-group" ng-class="{'has-error':errorShow.price&&!priceValid}">
+                        <label for="discount">Price</label>
+                        <input type="text" class="form-control" id="price" ng-model="data.price" ng-blur="valid('price')">
                     </div>
                     <div class="form-group">
                         <label for="remark">Remark</label>

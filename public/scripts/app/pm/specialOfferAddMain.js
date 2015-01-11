@@ -18,7 +18,8 @@ require([
                 'title_us' : false,
                 'title_cn' : false,
                 'title_hk' : false,
-                'discount' : false
+                'discount' : false,
+                'price' : false
             };
             $scope.valid = function(name) {
                 errorShow[name] = true;
@@ -33,6 +34,16 @@ require([
                 }
             });
 
+            $scope.priceValid = false;
+            $scope.$watch('offer.price', function(price){
+                price += '';
+                if (!price || isNaN(price)) {
+                    $scope.priceValid = false;
+                } else {
+                    $scope.priceValid = true;
+                }
+            });
+
             var submitting = false;
             $scope.submit = function(e) {
                 e && e.preventDefault();
@@ -40,7 +51,7 @@ require([
                     return;
                 }
                 showAllError();
-                if (!offer.title_us || !offer.title_cn || !offer.title_hk || !$scope.discountValid) {
+                if (!offer.title_us || !offer.title_cn || !offer.title_hk || !$scope.discountValid || !$scope.priceValid) {
                     return;
                 }
                 submitting = true;

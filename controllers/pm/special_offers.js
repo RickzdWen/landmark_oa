@@ -17,6 +17,9 @@ router.get('/', function(req, res, next){
         res._view = 'pm/special_offers';
         SalesProductModel.getInstance().getAllExistSpecialOffers().then(function(rows){
             rows = rows || [];
+            rows.forEach(function(row){
+                row.price = +(row.price / 1000).toFixed(2);
+            });
             res.doc.list = rows;
             res.doc.listJson = JSON.stringify(rows);
             res.render(res._view, res);

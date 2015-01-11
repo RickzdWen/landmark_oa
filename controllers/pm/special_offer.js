@@ -41,6 +41,7 @@ router.get('/:id', function(req, res, next){
             if (!offer) {
                 throw new CommonError('', 50005);
             }
+            offer.price = +(offer.price / 1000).toFixed(2);
             var relations = retArray[1] || [];
             var products = retArray[2] || {};
             for (var i = 0, len = relations.length; i < len; ++i) {
@@ -220,6 +221,7 @@ function constructOfferData(req) {
     data.remark = req.body.remark || '';
     data.discount = +(req.body.discount || 0);
     data.discount = +data.discount.toFixed(2);
+    data.price = +((req.body.price || 0) * 1000).toFixed(0);
     data.special_offer = 1;
     return data;
 }
