@@ -97,6 +97,35 @@
                     <div class="box col-sm-12">
                         <div class="box-inner">
                             <div class="box-header well" data-original-title="">
+                                <h2>Summary</h2>
+
+                                <div class="box-icon">
+                                    <a href="javascript:void(0)" class="btn btn-minimize btn-round btn-default" ng-click="hideSummary=!hideSummary;"><i
+                                                class="glyphicon" ng-class="{'glyphicon-chevron-up':!hideSummary,'glyphicon-chevron-down':hideSummary}"></i></a>
+                                </div>
+                            </div>
+                            <div class="box-content" ng-hide="hideSummary">
+                                <tabset justified="true">
+                                    <tab heading="English Summary" select="selectType('summary', 'us');"><%- doc.product.summary_us%></tab>
+                                    <tab heading="Simple Chinese Summary" select="selectType('summary', 'cn');"><%- doc.product.summary_cn%></tab>
+                                    <tab heading="Traditional Chinese Summary" select="selectType('summary', 'hk');"><%- doc.product.summary_hk%></tab>
+                                </tabset>
+                                <div class="row">
+                                    <div class="col-sm-2 col-sm-offset-8">
+                                        <a ng-href="/pm/product/<%=doc.product.id%>/display_summary/{{summaryType}}" class="btn btn-success btn-landmark btn-block" style="margin-top: 20px;">
+                                            <!--<i class="glyphicon glyphicon-plus icon-white"></i>-->
+                                            Edit
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="box col-sm-12">
+                        <div class="box-inner">
+                            <div class="box-header well" data-original-title="">
                                 <h2>Feature Description</h2>
 
                                 <div class="box-icon">
