@@ -12,6 +12,16 @@ var manager = {
         }
         pools[db] = mysql.createPool(dbConfig[db]);
         return pools[db];
+    },
+
+    releasePool : function(db) {
+        pools[db] && pools[db].end();
+    },
+
+    releaseAllPool : function() {
+        for (var db in pools) {
+            this.releasePool(db);
+        }
     }
 };
 

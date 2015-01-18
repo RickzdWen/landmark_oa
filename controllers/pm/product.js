@@ -9,6 +9,7 @@ var BrandModel = require(ROOT_PATH + '/models/BrandModel');
 var ProductModel = require(ROOT_PATH + '/models/ProductModel');
 var SalesProductModel = require(ROOT_PATH + '/models/SalesProductModel');
 var SalesProductRelationModel = require(ROOT_PATH + '/models/SalesProductRelationModel');
+var ProductService = require(ROOT_PATH + '/services/ProductService');
 var CommonError = require(ROOT_PATH + '/libs/errors/CommonError');
 
 router.get('/', function(req, res, next){
@@ -118,7 +119,11 @@ router.put('/:id', function(req, res, next){
         var data = constructProductData(req);
         ProductModel.getInstance().updateById(data, id).then(function(ret){
             res.doc = ret;
-            res.json(res.doc);
+            ProductService.calculateRelatedSpecialOffersOPrice(id).then(function(){
+                res.json(res.doc);
+            }, function(err){
+                next(err);
+            });
         }, function(err){
             next(err);
         });

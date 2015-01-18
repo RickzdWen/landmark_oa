@@ -5,13 +5,18 @@
 var express = require('express');
 var router = express.Router();
 var SalesProductRelationModel = require(ROOT_PATH + '/models/SalesProductRelationModel');
+var ProductService = require(ROOT_PATH + '/services/ProductService');
 var CommonError = require(ROOT_PATH + '/libs/errors/CommonError');
 
 router.post('/', function(req, res, next){
     try {
         var data = constructFormData(req);
         SalesProductRelationModel.getInstance().addNewRelation(data).then(function(){
-            res.json({code : 0});
+            ProductService.calculateOPrice(data.sid).then(function(){
+                res.json({code : 0});
+            }, function(err){
+                next(err);
+            });
         }, function(err){
             next(err);
         });
@@ -25,7 +30,11 @@ router.delete('/:sid/:pid', function(req, res, next){
         var sid = req.params.sid;
         var pid = req.params.pid;
         SalesProductRelationModel.getInstance().delete('sid=? AND pid=?', [sid, pid]).then(function(){
-            res.json({code : 0});
+            ProductService.calculateOPrice(sid).then(function(){
+                res.json({code : 0});
+            }, function(err){
+                next(err);
+            });
         }, function(err){
             next(err);
         });
