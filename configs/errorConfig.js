@@ -17,5 +17,8 @@ module.exports = {
     51004 : 'Not a directory',
     51005 : 'File extension is not allowed',
 
+    52000 : 'Password too short',
+    52001 : 'Email has been exist',
+
     60000 : 'System error'
 };
