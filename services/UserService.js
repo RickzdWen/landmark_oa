@@ -3,16 +3,15 @@
  */
 
 var UserModel = require(ROOT_PATH + '/models/UserModel');
-var moment = require('moment');
 var q = require('q');
 var CommonError = require(ROOT_PATH + '/libs/errors/CommonError');
 
 exports.register = function(data){
     if (!data.nick || !data.passwd || !data.email) {
-        throw new CommonError('', 500002);
+        throw new CommonError('', 50002);
     }
     var delay = q.defer();
-    var crypto = require('ctypto');
+    var crypto = require('crypto');
     UserModel.getInstance().checkEmailExist(data.email).then(function(exist){
         if (exist) {
             throw new CommonError('', 52001);
@@ -24,7 +23,8 @@ exports.register = function(data){
                     var salt = buf.toString('hex');
                     var pwd = data.passwd + salt;
                     var hash = crypto.createHash('md5');
-                    data.passwd = hash.digest(pwd);
+                    hash.update(pwd);
+                    data.passwd = hash.digest('hex');
                     data.salt = salt;
                     UserModel.getInstance().addNewOne(data).then(function(ret){
                         delay.resolve(ret);
@@ -33,6 +33,32 @@ exports.register = function(data){
                     });
                 }
             });
+        }
+    }, function(err){
+        delay.reject(err);
+    });
+    return delay.promise;
+};
+
+exports.login = function(data) {
+    if (!data.email || !data.passwd) {
+        throw new CommonError('', 50002);
+    }
+    var delay = q.defer();
+    var crypto = require('crypto');
+    UserModel.getInstance().getOne('email=?', [data.email]).then(function(user){
+        if (!user) {
+            delay.reject(new CommonError('', 52002));
+        } else {
+            var pwd = data.passwd + user.salt;
+            var hash = crypto.createHash('md5');
+            hash.update(pwd);
+            pwd = hash.digest('hex');
+            if (pwd !== user.passwd) {
+                delay.reject(new CommonError('', 52002));
+            } else {
+                delay.resolve(user);
+            }
         }
     }, function(err){
         delay.reject(err);

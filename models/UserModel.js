@@ -5,6 +5,7 @@
 var declare = require(ROOT_PATH + '/libs/declare');
 var lmBase = require('./LandmarkBase');
 var q = require('q');
+var moment = require('moment');
 var CommonError = require(ROOT_PATH + '/libs/errors/CommonError');
 
 var _instance = null;
