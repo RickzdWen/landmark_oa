@@ -22,6 +22,14 @@ CommonError.prototype.getMessage = function() {
     return this.code && errorConfig[this.code];
 };
 
+CommonError.prototype.getMessage4Production = function(lang) {
+    if (this.code && lang) {
+        var error = require(ROOT_PATH + '/configs/error_' + lang);
+        return error[this.code] || error.other;
+    }
+    return this.message;
+};
+
 CommonError.prototype.getStack = function() {
     return this.innerError ? this.innerError.stack : this.stack;
 };

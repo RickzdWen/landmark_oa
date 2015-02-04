@@ -65,3 +65,21 @@ exports.login = function(data) {
     });
     return delay.promise;
 };
+
+exports.getLoginUser = function(id) {
+    var delay = q.defer();
+    UserModel.getInstance().getOne('id=?', [id]).then(function(user){
+        if (!user) {
+            delay.reject(new CommonError('', 52002));
+        } else {
+            delay.resolve({
+                id : id,
+                email : user.email,
+                nick : user.nick
+            });
+        }
+    }, function(err){
+        delay.reject(err);
+    });
+    return delay.promise;
+};
