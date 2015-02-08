@@ -166,6 +166,7 @@ function mergeProductAndBrand(products, brands, lang) {
         obj.cid = product.cid;
         obj.bid = product.bid;
         obj.qty = product.qty;
+        obj.sid = product.sid;
         ret.push(obj);
     });
     return ret;

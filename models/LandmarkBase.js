@@ -7,6 +7,13 @@ var ModelBase = require('./ModelBase');
 
 module.exports = declare([ModelBase], {
     rdb : 'landmark_r',
-    wdb : 'landmark_w'
+    wdb : 'landmark_w',
+
+    addNewOne : function(data) {
+        var moment = require('moment');
+        data = data || {};
+        data.created = moment().format('YYYY-MM-DD HH:mm:ss');
+        return this.create(data);
+    }
 });
 

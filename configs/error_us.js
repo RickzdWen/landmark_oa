@@ -3,6 +3,7 @@
  */
 
 module.exports = {
+    50000 : 'user not login',
     50002 : 'parameter error',
     52000 : 'password too short',
     52001 : 'email already exists',

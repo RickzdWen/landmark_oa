@@ -13,12 +13,6 @@ var _instance = null;
 var UserModel = declare([lmBase], {
     table : 'user',
 
-    addNewOne : function(data) {
-        data = data || {};
-        data.created = moment().format('YYYY-MM-DD HH:mm:ss');
-        return this.create(data);
-    },
-
     checkEmailExist : function(email) {
         if (!email) {
             throw new CommonError('', 500002);
