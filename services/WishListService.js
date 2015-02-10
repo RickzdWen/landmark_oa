@@ -40,5 +40,5 @@ exports.addToWishList = function(uid, sid, pid) {
 };
 
 exports.listByPage = function(uid) {
-    
+
 };
