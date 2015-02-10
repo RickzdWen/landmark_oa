@@ -2,9 +2,9 @@
  * Created by Administrator on 2015/1/10.
  */
 
-var ProductModel = require('../models/ProductModel');
-var SalesProductModel = require('../models/SalesProductModel');
-var SalesProductRelationModel = require('../models/SalesProductRelationModel');
+var ProductModel = require(ROOT_PATH + '/models/ProductModel');
+var SalesProductModel = require(ROOT_PATH + '/models/SalesProductModel');
+var SalesProductRelationModel = require(ROOT_PATH + '/models/SalesProductRelationModel');
 var BrandModel = require(ROOT_PATH + '/models/BrandModel');
 var q = require('q');
 var numeral = require('numeral');

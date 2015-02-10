@@ -3,8 +3,8 @@
  */
 
 var CartModel = require(ROOT_PATH + '/models/CartModel');
-var ProductModel = require('../models/ProductModel');
-var SalesProductModel = require('../models/SalesProductModel');
+var ProductModel = require(ROOT_PATH + '/models/ProductModel');
+var SalesProductModel = require(ROOT_PATH + '/models/SalesProductModel');
 var q = require('q');
 var numeral = require('numeral');
 var CommonError = require(ROOT_PATH + '/libs/errors/CommonError');
