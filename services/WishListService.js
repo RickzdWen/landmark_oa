@@ -45,14 +45,14 @@ exports.listByPage = function(uid, page, lang) {
     }
     page = page || 1;
     var delay = q.defer();
-    WishListModel.getInstance().getByPage('uid=?', [uid], '*', page).then(function(ret){
+    WishListModel.getInstance().getByPage('uid=? ORDER BY updated DESC', [uid], '*', page).then(function(ret){
         var list = ret.result;
         if (!list.length) {
             delay.resolve(ret);
         } else {
             var pidArray = [];
             var sidArray = [];
-            rows.forEach(function(item){
+            list.forEach(function(item){
                 item.pid && pidArray.push(item.pid);
                 sidArray.push(item.sid);
             });
@@ -106,3 +106,10 @@ function constructWishItemDetail(item, pMap, sMap, lang) {
     }
     return item;
 }
+
+exports.delete = function(sid, uid) {
+    if (!sid || !uid) {
+        throw new CommonError('', 50002);
+    }
+    return WishListModel.getInstance().delete('sid=? AND uid=?', [sid, uid]);
+};

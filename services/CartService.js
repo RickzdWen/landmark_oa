@@ -118,11 +118,20 @@ function constructCartDetail(item, pMap, sMap, lang) {
     item.total_s = nTotal.format('0,0.00');
 }
 
-exports.removeCartItem = function(id) {
-    if (!id) {
+exports.removeCartItem = function(id, uid) {
+    if (!id || !uid) {
         throw new CommonError('', 50002);
     }
     return CartModel.getInstance().update({
         deleted : 1
-    }, 'id=?', [id]);
+    }, 'id=? AND uid=?', [id, uid]);
+};
+
+exports.updateCartQty = function(id, uid, qty) {
+    if (!id || !uid || !qty || isNaN(qty) || qty <= 0) {
+        throw new CommonError('', 50002);
+    }
+    return CartModel.getInstance().update({
+        qty : qty
+    }, 'id=? AND uid=?', [id, uid]);
 };

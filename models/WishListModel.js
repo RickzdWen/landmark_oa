@@ -11,7 +11,7 @@ var CommonError = require(ROOT_PATH + '/libs/errors/CommonError');
 var _instance = null;
 
 var WishListModel = declare([lmBase], {
-    table : 'cart'
+    table : 'wish_list'
 });
 
 WishListModel.getInstance = function() {
