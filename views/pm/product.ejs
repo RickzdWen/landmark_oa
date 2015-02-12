@@ -207,6 +207,27 @@
                         </div>
                     </div>
                 </div>
+                <div class="row">
+                    <div class="box col-sm-12">
+                        <div class="box-inner">
+                            <div class="box-header well" data-original-title="">
+                                <h2>Certificate</h2>
+
+                                <div class="box-icon">
+                                    <a href="javascript:void(0)" class="btn btn-minimize btn-round btn-default" ng-click="hideCert=!hideCert;"><i
+                                                class="glyphicon" ng-class="{'glyphicon-chevron-up':!hideCert,'glyphicon-chevron-down':hideCert}"></i></a>
+                                </div>
+                            </div>
+                            <div class="box-content" ng-hide="hideCert">
+                                <img ng-src="/images/products/cert_<%=doc.product.id%>.jpg?v={{product.cimg_version}}" ng-show="product.cimg_version">
+                                <span lmp-file-upload data-upload-url="/pm/product/upload-cert/<%= doc.product.id%>" upload-call-back="uploadCertCallBack" data-iframe-name="certIframe"></span>
+                                <a href="javascript:void(0)" class="btn btn-danger" ng-click="deleteCert($event);" style="margin-top: 20px;">
+                                    Delete
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

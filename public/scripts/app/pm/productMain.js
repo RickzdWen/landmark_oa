@@ -77,6 +77,31 @@ require([
                 }
             };
 
+            $scope.uploadCertCallBack = function(json){
+                if (json) {
+                    if (json.code === 0) {
+                        product.cimg_version = json.cimg_version;
+                    } else {
+                        alert('only jpg image is allowed!');
+                    }
+                }
+            };
+
+            $scope.deleteCert = function(e){
+                e.preventDefault();
+                if (submitting) {
+                    return;
+                }
+                submitting = true;
+                _getService($http.delete('/pm/product/cert-img/' + product.id)).then(function(){
+                    product.cimg_version = 0;
+                }, function(error){
+                    alert(error);
+                })['finally'](function(){
+                    submitting = false;
+                });
+            };
+
             var errorShow = $scope.errorShow = {};
             $scope.valid = function(name) {
                 errorShow[name] = true;

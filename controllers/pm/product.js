@@ -230,6 +230,60 @@ router.post('/upload-image/:id', function(req, res, next){
     });
 });
 
+router.post('/upload-cert/:id', function(req, res, next){
+    var id = req.params.id;
+    var fileHandler = require(ROOT_PATH + '/libs/fileHandler');
+    var fs = require('fs');
+    var targetPath = ROOT_PATH + '/public/images/products';
+    var exists = fs.existsSync(targetPath);
+    if (!exists) {
+        fs.mkdirSync(targetPath);
+    }
+    fs.lstat(targetPath, function(err, stats){
+        if (err) {
+            next(new CommonError(err));
+        } else {
+            if (!stats.isDirectory()) {
+                next(new CommonError('', 51004));
+            }
+            fileHandler.handleImageUpload({
+                targetPath : targetPath,
+                targetName : 'cert_' + id,
+                extension : /jpg/i
+            }, req, res, function(err, target, fields){
+                if (err) {
+                    next(err);
+                } else {
+                    var version = +new Date();
+                    ProductModel.getInstance().update({
+                        cimg_version : version
+                    }, 'id=?', [id]).then(function(){
+                        res.json({
+                            code : 0,
+                            cimg_version : version
+                        });
+                    }, function(err){
+                        next(err);
+                    });
+                }
+            });
+        }
+    });
+});
+
+router.delete('/cert-img/:id', function(req, res, next){
+    var id = req.params.id;
+    ProductModel.getInstance().update({
+        cimg_version : ''
+    }, 'id=?', [id]).then(function(){
+        res.json({
+            code : 0
+        });
+    }, function(err){
+        next(err);
+    });
+});
+
 router.put('/published/:id', function(req, res, next){
     try {
         var id = req.params.id;

@@ -354,3 +354,17 @@ exports.calculateRelatedSpecialOffersOPrice = function(pid) {
     });
     return defer.promise;
 };
+
+exports.getCertificates = function(lang){
+    var delay = q.defer();
+    ProductModel.getInstance().getAll('cimg_version!=0', []).then(function(rows){
+        rows = rows || [];
+        rows.forEach(function(item){
+            item.name = item['name_' + lang];
+        });
+        delay.resolve(rows);
+    }, function(err){
+        delay.reject(err);
+    });
+    return delay.promise;
+};
