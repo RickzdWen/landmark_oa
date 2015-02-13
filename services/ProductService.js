@@ -368,3 +368,38 @@ exports.getCertificates = function(lang){
     });
     return delay.promise;
 };
+
+exports.deleteProductById = function(id) {
+    if (!id) {
+        throw new CommonError('', 50002);
+    }
+    var CartModel = require(ROOT_PATH + '/models/CartModel');
+    var WishListModel = require(ROOT_PATH + '/models/WishListModel');
+    var delay = q.defer();
+    SalesProductRelationModel.getInstance().getAll('pid=?', [id]).then(function(rows){
+        if (!rows || !rows.length) {
+            throw new CommonError('', 60000);
+        }
+        var sidArray = [];
+        rows.forEach(function(item){
+            sidArray.push(item.sid);
+        });
+        var sidSql = '(\'' + sidArray.join('\',\'') + '\')';
+        q.all([
+            ProductModel.getInstance().deleteById(id),
+            SalesProductModel.getInstance().update({
+                deleted : 1
+            }, 'id IN ' + sidSql),
+            CartModel.getInstance().update({
+                deleted : 1
+            }, 'deleted=0 AND sid IN ' + sidSql),
+            WishListModel.getInstance().delete('sid IN ' + sidSql)
+        ]).then(function(){
+            delay.resolve();
+        }, function(err){
+            delay.reject(err);
+        });
+    }, function(err){
+        delay.reject(err);
+    });
+};

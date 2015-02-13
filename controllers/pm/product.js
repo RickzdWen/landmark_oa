@@ -135,7 +135,7 @@ router.put('/:id', function(req, res, next){
 router.delete('/:id', function(req, res, next){
     try {
         var id = req.params.id;
-        ProductModel.getInstance().deleteById(id).then(function(){
+        ProductService.deleteProductById(id).then(function(){
             res.json({});
         }, function(err){
             next(err);

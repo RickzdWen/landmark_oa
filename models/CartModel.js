@@ -11,7 +11,16 @@ var CommonError = require(ROOT_PATH + '/libs/errors/CommonError');
 var _instance = null;
 
 var CartModel = declare([lmBase], {
-    table : 'cart'
+    table : 'cart',
+
+    deleteBySid : function(sid) {
+        if (!sid) {
+            throw new CommonError('', 50002);
+        }
+        return this.update({
+            deleted : 1
+        }, 'sid=? AND deleted=?', [sid, 0]);
+    }
 });
 
 CartModel.getInstance = function() {
