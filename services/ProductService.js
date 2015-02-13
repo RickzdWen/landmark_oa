@@ -402,4 +402,5 @@ exports.deleteProductById = function(id) {
     }, function(err){
         delay.reject(err);
     });
+    return delay.promise;
 };
