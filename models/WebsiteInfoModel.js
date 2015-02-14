@@ -12,22 +12,46 @@ var WebsiteInfoModel = declare([lmBase], {
     table : 'website_info',
 
     writeSafetyDesc : function(content, lang) {
-        if (!lang) {
+        return this._write('safety', content, lang);
+    },
+
+    getSafetyDesc : function(lang) {
+        return this._read('safety', lang);
+    },
+
+    writeAboutDesc : function(content, lang) {
+        return this._write('about', content, lang);
+    },
+
+    getAboutDesc : function(lang) {
+        return this._read('about', lang);
+    },
+
+    writePrivacyDesc : function(content, lang) {
+        return this._write('privacy', content, lang);
+    },
+
+    getPrivacyDesc : function(lang) {
+        return this._read('privacy', lang);
+    },
+
+    _write : function(key, content, lang) {
+        if (!lang || !key) {
             throw new CommonError('', 50002);
         }
         return this.replace({
-            info_key : 'safety_' + lang,
+            info_key : key + '_' + lang,
             content : content
         });
     },
 
-    getSafetyDesc : function(lang) {
-        if (!lang) {
+    _read : function(key, lang) {
+        if (!lang || !key) {
             throw new CommonError('', 50002);
         }
         var q = require('q');
         var delay = q.defer();
-        this.getOne('info_key=?', ['safety_' + lang]).then(function(row){
+        this.getOne('info_key=?', [key + '_' + lang]).then(function(row){
             row = row || {};
             delay.resolve(row.content || '');
         }, function(err){
