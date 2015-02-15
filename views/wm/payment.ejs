@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include ../common_head.ejs%>
+</head>
+<body ng-controller="mainCtrl">
+<%- include ../common_header.ejs%>
+<div class="main-container">
+    <div class="row">
+        <%- include left_nav.ejs%>
+        <div class="col-md-10 col-lg-10">
+            <div class="main-part">
+                <div class="h2"><%=doc.title%></div>
+                <div class="divider"></div>
+                <tabset justified="true">
+                    <tab heading="English Website" select="selectLocale('us');"><%-doc.payment.payment_us||''%></tab>
+                    <tab heading="Simple Chinese Website" select="selectLocale('cn');"><%-doc.payment.payment_cn||''%></tab>
+                    <tab heading="Traditional Chinese Website" select="selectLocale('hk');"><%-doc.payment.payment_hk||''%></tab>
+                </tabset>
+                <div class="row">
+                    <div class="col-sm-2 col-sm-offset-8">
+                        <a ng-href="/wm/payment/{{locale}}" class="btn btn-success btn-landmark btn-block" style="margin-top: 20px;">
+                            <!--<i class="glyphicon glyphicon-plus icon-white"></i>-->
+                            Edit
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<%- include ../common_footer.ejs%>
+</body>
+<script type="text/javascript" src="/requirejs_config.js"></script>
+<script data-main="app/wm/safetyMain" src="/bower_components/requirejs/require.js"></script>
+</html>

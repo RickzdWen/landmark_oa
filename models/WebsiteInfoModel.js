@@ -35,6 +35,30 @@ var WebsiteInfoModel = declare([lmBase], {
         return this._read('privacy', lang);
     },
 
+    writePaymentDesc : function(content, lang) {
+        return this._write('payment', content, lang);
+    },
+
+    getPaymentDesc : function(lang) {
+        return this._read('payment', lang);
+    },
+
+    writeDeliveryDesc : function(content, lang) {
+        return this._write('delivery', content, lang);
+    },
+
+    getDeliveryDesc : function(lang) {
+        return this._read('delivery', lang);
+    },
+
+    writeTermsDesc : function(content, lang) {
+        return this._write('terms', content, lang);
+    },
+
+    getTermsDesc : function(lang) {
+        return this._read('terms', lang);
+    },
+
     _write : function(key, content, lang) {
         if (!lang || !key) {
             throw new CommonError('', 50002);
