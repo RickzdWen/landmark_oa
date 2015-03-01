@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include ../common_head.ejs%>
+</head>
+<body>
+<%- include ../common_header.ejs%>
+<div class="main-container">
+    <div class="row">
+        <%- include left_nav.ejs%>
+        <div class="col-md-10 col-lg-10">
+            <div class="main-part">
+                <div class="h2">Add New FAQ</div>
+                <div class="divider"></div>
+                <form role="form" action="/wm/faq/add" method="post">
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <label for="question_us">Question(English):</label>
+                            <textarea name="question_us" id="question_us" rows="6" class="form-control"></textarea>
+                        </div>
+                        <div class="form-group col-sm-6">
+                            <label for="answer_us">Answer(English):</label>
+                            <textarea name="answer_us" id="answer_us" rows="6" class="form-control"></textarea>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <label for="question_cn">Question(Simple Chinese):</label>
+                            <textarea name="question_cn" id="question_cn" rows="6" class="form-control"></textarea>
+                        </div>
+                        <div class="form-group col-sm-6">
+                            <label for="answer_cn">Answer(Simple Chinese):</label>
+                            <textarea name="answer_cn" id="answer_cn" rows="6" class="form-control"></textarea>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <label for="question_hk">Question(Traditional Chinese):</label>
+                            <textarea name="question_hk" id="question_hk" rows="6" class="form-control"></textarea>
+                        </div>
+                        <div class="form-group col-sm-6">
+                            <label for="answer_hk">Answer(Traditional Chinese):</label>
+                            <textarea name="answer_hk" id="answer_hk" rows="6" class="form-control"></textarea>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-2 col-sm-offset-8">
+                            <button class="btn btn-success btn-landmark btn-block" type="submit">Save</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<%- include ../common_footer.ejs%>
+</body>
+</html>

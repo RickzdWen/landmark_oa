@@ -71,6 +71,10 @@ router.get('/', function(req, res, next){
                     item.brand_hk = bItem.name_hk;
                 }
                 item.price = +(item.price / 1000).toFixed(2);
+                item.feature_us = item.feature_cn = item.feature_hk = '';
+                item.parameters_us = item.parameters_cn = item.parameters_hk = '';
+                item.usage_us = item.usage_cn = item.usage_hk = '';
+                item.summary_us = item.summary_cn = item.summary_hk = '';
             }
             res.doc.products = pRet;
             res.doc.categories = categories;

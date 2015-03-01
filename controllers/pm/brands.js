@@ -30,6 +30,7 @@ router.get('/', function(req, res, next){
                 var item = list[i];
                 item.product_num = info[item.id] || 0;
                 item.country_name = (item.country && util.countries[item.country]) || '';
+                item.desc_us = item.desc_cn = item.desc_hk = '';
             }
             res.doc.list = list;
             res.doc.countries = util.countries;
