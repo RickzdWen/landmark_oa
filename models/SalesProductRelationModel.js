@@ -36,6 +36,31 @@ var SalesProductRelationModel = declare([lmBase], {
             throw new CommonError('', 50002);
         }
         return this.getAll('sid=?', [sid]);
+    },
+
+    getRelationMapBySids : function(sidArray) {
+        var delay = q.defer();
+        if (!sidArray || !sidArray.length) {
+            delay.resolve({});
+        } else {
+            this.getAll('sid IN(\'' + sidArray.join('\',\'') + '\')').then(function(rows){
+                var pidArray = [];
+                var map = {};
+                rows = rows || [];
+                rows.forEach(function(item){
+                    pidArray.push(item.pid);
+                    map[item.sid] = map[item.sid] || [];
+                    map[item.sid].push(item);
+                });
+                delay.resolve({
+                    pidArray : pidArray,
+                    map : map
+                });
+            }, function(err){
+                delay.reject(err);
+            });
+        }
+        return delay.promise;
     }
 });
 
