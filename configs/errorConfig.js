@@ -21,5 +21,7 @@ module.exports = {
     52001 : 'Email has been exist',
     52002 : 'Email not exist or Password not correct',
 
+    53000 : 'Incomplete address information',
+
     60000 : 'System error'
 };

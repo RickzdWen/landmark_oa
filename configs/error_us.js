@@ -9,6 +9,8 @@ module.exports = {
     52001 : 'email already exists',
     52002 : 'email not exist or password not correct',
 
+    53000 : 'incomplete address information',
+
     60000 : 'System Error',
 
     other : 'Unknown Error'

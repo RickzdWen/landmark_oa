@@ -14,6 +14,11 @@ exports.updateCurrentUsedAddress = function(data, uid, id) {
         throw new CommonError('', 50002);
     }
     data = data || {};
+    if (data.country == 'US') {
+        data.state = '';
+    } else {
+        data.state_short = '';
+    }
     if (id) {
         return AddressModel.getInstance().update(data, 'id=? AND uid=?', [id, uid]);
     } else {
