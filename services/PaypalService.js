@@ -4,6 +4,7 @@
 
 var paypal_sdk = require('paypal-rest-sdk');
 var q = require('q');
+var CommonError = require(ROOT_PATH + '/libs/errors/CommonError');
 
 paypal_sdk.configure({
     'host': 'api.sandbox.paypal.com',
@@ -28,6 +29,24 @@ exports.createPayment = function(data) {
     var delay = q.defer();
     paypal_sdk.payment.create(details, function(error, payment){
         if (error) {
+            delay.reject(error);
+        } else {
+            delay.resolve(payment);
+        }
+    });
+    return delay.promise;
+};
+
+exports.executePayment = function(payerId, paymentId) {
+    if (!payerId || !paymentId) {
+        throw new CommonError('', 500002);
+    }
+    var details = {
+        pasyer_id : payerId
+    };
+    var delay = q.defer();
+    paypal_sdk.payment.execute(paymentId, details, function(error, payment){
+        if(error){
             delay.reject(error);
         } else {
             delay.resolve(payment);
