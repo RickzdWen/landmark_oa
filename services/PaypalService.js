@@ -17,10 +17,7 @@ exports.createPayment = function(data) {
         payer : {
             payment_method : data.method || 'paypal'
         },
-        transactions : [{
-            amount : data.amount,
-            description : data.desc || 'landmark shop payment'
-        }],
+        transactions : [data.transaction],
         redirect_urls : {
             return_url : data.returnUrl || 'http://localhost:3000/account/paypal/return',
             cancel_url : data.cancelUrl || 'http://localhost:3000/account/paypal/return_cancel'
@@ -42,7 +39,7 @@ exports.executePayment = function(payerId, paymentId) {
         throw new CommonError('', 500002);
     }
     var details = {
-        pasyer_id : payerId
+        payer_id : payerId
     };
     var delay = q.defer();
     paypal_sdk.payment.execute(paymentId, details, function(error, payment){
