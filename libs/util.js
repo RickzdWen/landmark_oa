@@ -25,9 +25,9 @@ exports.getCountryName = function(country){
     return country;
 };
 
-exports.getStateName = function(state, country) {
-    if (state && country && country.toUpperCase() == 'US') {
-        return this.usStates[state.toUpperCase()] || state;
+exports.getStateName = function(state, state_short, country) {
+    if (state_short && country && country.toUpperCase() == 'US') {
+        return this.usStates[state_short.toUpperCase()] || state_short;
     }
     return state;
 };

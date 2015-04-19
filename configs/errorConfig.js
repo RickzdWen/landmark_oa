@@ -22,6 +22,10 @@ module.exports = {
     52002 : 'Email not exist or Password not correct',
 
     53000 : 'Incomplete address information',
+    53001 : 'Order not exists',
+
+    54000 : 'Paypal payment error',
+    54001 : 'Payment state error',
 
     60000 : 'System error'
 };

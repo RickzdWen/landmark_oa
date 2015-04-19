@@ -3,7 +3,7 @@
  */
 
 var declare = require(ROOT_PATH + '/libs/declare');
-var lmBase = require('./LandmarkBase');
+var lmBase = require(ROOT_PATH + '/models/LandmarkBase');
 var q = require('q');
 var moment = require('moment');
 var CommonError = require(ROOT_PATH + '/libs/errors/CommonError');
@@ -20,6 +20,16 @@ var CartModel = declare([lmBase], {
         return this.update({
             deleted : 1
         }, 'sid=? AND deleted=?', [sid, 0]);
+    },
+
+    deleteByCartIds : function(uid, idArray) {
+        if (!uid || !idArray || !idArray.length) {
+            throw new CommonError('', 50002);
+        }
+        var sql = 'uid=? AND id IN(\'' + idArray.join('\',\'') + '\')';
+        return this.update({
+            deleted : 1
+        }, sql, [uid]);
     }
 });
 

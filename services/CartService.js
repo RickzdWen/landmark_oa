@@ -105,7 +105,11 @@ exports.listUserCart = function(uid, lang) {
 function getInfoFromCartRows(rows, lang, onlyExists) {
     var delay = q.defer();
     if (!rows || !rows.length) {
-        delay.resolve(rows);
+        delay.resolve({
+            list : [],
+            totalPrice : 0,
+            totalPrice_s : '0.00'
+        });
     } else {
         var sidArray = [];
         rows.forEach(function(item){
