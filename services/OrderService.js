@@ -7,6 +7,8 @@ var CartModel = require(ROOT_PATH + '/models/CartModel');
 var PaypalService = require(ROOT_PATH + '/services/PaypalService');
 var util = require(ROOT_PATH + '/libs/util');
 var CommonError = require(ROOT_PATH + '/libs/errors/CommonError');
+var PaymentType = require(ROOT_PATH + '/enum/PaymentType');
+var OrderStatus = require(ROOT_PATH + '/enum/OrderStatus');
 
 var paymentType = {
     0 : 'paypal'
@@ -19,7 +21,6 @@ exports.placePaypalOrder = function(uid, data, carts) {
     var delay = q.defer();
     PaypalService.createPayment(ret.paypalData).then(function(payment){
         orderData.pay_id = payment.id;
-        console.log(orderData);
         OrderModel.getInstance().addNewOne(orderData).then(function(res){
             var idArrays = carts.list.map(function(item){
                 return item.id;
@@ -59,7 +60,7 @@ exports.executePaypalPayment = function(uid, payerId, paymentId) {
         var carts = JSON.parse(order.cart_snapshot);
         var transaction = getTransactionByCarts(carts, order.amount, order.shipping_fee);
         PaypalService.executePayment(payerId, paymentId, transaction).then(function(payment){
-            OrderModel.getInstance().updateStatus(order.id, 1).then(function(){
+            OrderModel.getInstance().updateStatus(order.id, OrderStatus.PAYMENT).then(function(){
                 delay.resolve(payment);
             }, function(err){
                 delay.reject(err);
@@ -67,6 +68,23 @@ exports.executePaypalPayment = function(uid, payerId, paymentId) {
         }, function(err){
             delay.reject(err);
         });
+    }, function(err){
+        delay.reject(err);
+    });
+    return delay.promise;
+};
+
+exports.getOrdersByUid = function(uid, page) {
+    if (!uid) {
+        throw new CommonError('', 50002);
+    }
+    var q = require('q');
+    var delay = q.defer();
+    OrderModel.getInstance().getByPage('uid=?', [uid], '*', page).then(function(res){
+        res.result.forEach(function(item){
+            item.cart_snapshot = JSON.parse(item.cart_snapshot);
+        });
+        delay.resolve(res);
     }, function(err){
         delay.reject(err);
     });
