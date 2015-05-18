@@ -79,10 +79,14 @@ exports.getOrdersByUid = function(uid, page) {
         throw new CommonError('', 50002);
     }
     var q = require('q');
+    var numeral = require('numeral');
+    var moment = require('moment');
     var delay = q.defer();
-    OrderModel.getInstance().getByPage('uid=?', [uid], '*', page).then(function(res){
+    OrderModel.getInstance().getByPage('uid=? ORDER BY created DESC', [uid], '*, UNIX_TIMESTAMP(created) AS created_at', page).then(function(res){
         res.result.forEach(function(item){
             item.cart_snapshot = JSON.parse(item.cart_snapshot);
+            item.amount_s = numeral(item.amount).format('0,0.00');
+            item.created_time = moment.unix(item.created_at).format('YYYY-MM-DD HH:mm:ss');
         });
         delay.resolve(res);
     }, function(err){
