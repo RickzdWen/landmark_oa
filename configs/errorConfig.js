@@ -26,6 +26,7 @@ module.exports = {
 
     54000 : 'Paypal payment error',
     54001 : 'Payment state error',
+    54002 : 'Order not exists',
 
     60000 : 'System error'
 };

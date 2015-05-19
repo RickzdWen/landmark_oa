@@ -95,6 +95,38 @@ exports.getOrdersByUid = function(uid, page) {
     return delay.promise;
 };
 
+exports.getOrderDetail = function(id, uid) {
+    if (!id || !uid) {
+        throw new CommonError('', 50002);
+    }
+    var q = require('q');
+    var delay = q.defer();
+    OrderModel.getInstance().getOne('id = ? AND uid =?', [id, uid]).then(function(order){
+        if (!order) {
+            throw new CommonError('', 54002);
+        }
+        order.carts = JSON.parse(order.cart_snapshot);
+        order.address = {
+            country : order.country,
+            state : order.state,
+            city : order.city,
+            street : order.street,
+            zip : order.zip,
+            first_name : order.first_name,
+            last_name : order.last_name,
+            phone : order.phone
+        };
+        if (order.status < OrderStatus.EXPRESS) {
+            order.address.country_short = util.getCountryShortName(order.country);
+            order.address.state_short = util.getStateShortName(order.state, order.country);
+        }
+        delay.resolve(order);
+    }, function(err){
+        delay.reject(err);
+    });
+    return delay.promise;
+};
+
 function constructOrderData(uid, data, carts, type) {
     if (!data || !carts) {
         throw new CommonError('', 50002);
