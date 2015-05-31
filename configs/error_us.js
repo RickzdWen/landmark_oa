@@ -11,6 +11,8 @@ module.exports = {
 
     53000 : 'incomplete address information',
 
+    54003 : 'Refund reason is required',
+
     60000 : 'System Error',
 
     other : 'Unknown Error'

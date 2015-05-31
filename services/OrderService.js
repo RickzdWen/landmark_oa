@@ -99,6 +99,7 @@ exports.getOrderDetail = function(id, uid) {
     if (!id || !uid) {
         throw new CommonError('', 50002);
     }
+    var numeral = require('numeral');
     var q = require('q');
     var delay = q.defer();
     OrderModel.getInstance().getOne('id = ? AND uid =?', [id, uid]).then(function(order){
@@ -118,13 +119,70 @@ exports.getOrderDetail = function(id, uid) {
         };
         if (order.status < OrderStatus.EXPRESS) {
             order.address.country_short = util.getCountryShortName(order.country);
-            order.address.state_short = util.getStateShortName(order.state, order.country);
+            order.address.state_short = util.getStateShortName(order.state, order.address.country_short);
         }
+        order.amount_s = numeral(order.amount).format('0,0.00');
+        order.shipping_fee_s = numeral(order.shipping_fee).format('0,0.00');
         delay.resolve(order);
     }, function(err){
         delay.reject(err);
     });
     return delay.promise;
+};
+
+exports.modifyOrderAddress = function(uid, id, data) {
+    if (!uid || !id || !data) {
+        throw new CommonError('', 50002);
+    }
+    var addressInfo = {
+        country : util.getCountryName(data.country),
+        state : util.getStateName(data.state, data.state_short, data.country),
+        city : data.city,
+        street : data.street,
+        zip : data.zip,
+        first_name : data.first_name,
+        last_name : data.last_name,
+        phone : data.phone
+    };
+    return OrderModel.getInstance().update(addressInfo, 'id = ? AND uid = ? AND status < 2', [id, uid]);
+};
+
+exports.confirmReceive = function(uid, id) {
+    if (!uid || !id) {
+        throw new CommonError('', 50002);
+    }
+    return OrderModel.getInstance().update({
+        status : 3
+    }, 'id = ? AND uid =? AND status > 0 AND status < 3', [id, uid]);
+};
+
+exports.applyPaypalRefund = function(uid, id, reason) {
+    if (!uid || !id || !reason) {
+        throw new CommonError('', 50002);
+    }
+    return OrderModel.getInstance().update({
+        status : 5,
+        refund_reason : reason
+    }, 'id=? AND uid=? AND (status=1 OR status=5)', [id, uid]);
+};
+
+exports.cancelPaypalRefund = function(uid, id) {
+    if (!uid || !id) {
+        throw new CommonError('', 50002);
+    }
+    return OrderModel.getInstance().update({
+        status : 1,
+        refund_reason : ''
+    }, 'id=? AND uid=? AND status=5', [id, uid]);
+};
+
+exports.modifyRefundReason = function(uid, id, reason) {
+    if (!uid || !id || !reason) {
+        throw new CommonError('', 50002);
+    }
+    return OrderModel.getInstance().update({
+        refund_reason : reason
+    }, 'id=? AND uid=? AND status=5', [id, uid]);
 };
 
 function constructOrderData(uid, data, carts, type) {
