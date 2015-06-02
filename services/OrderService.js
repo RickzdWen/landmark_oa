@@ -21,6 +21,7 @@ exports.placePaypalOrder = function(uid, data, carts) {
     var delay = q.defer();
     PaypalService.createPayment(ret.paypalData).then(function(payment){
         orderData.pay_id = payment.id;
+        orderData.links = JSON.stringify(payment.links);
         OrderModel.getInstance().addNewOne(orderData).then(function(res){
             var idArrays = carts.list.map(function(item){
                 return item.id;
@@ -107,6 +108,7 @@ exports.getOrderDetail = function(id, uid) {
             throw new CommonError('', 54002);
         }
         order.carts = JSON.parse(order.cart_snapshot);
+        order.links = order.links && JSON.parse(order.links);
         order.address = {
             country : order.country,
             state : order.state,
@@ -120,6 +122,15 @@ exports.getOrderDetail = function(id, uid) {
         if (order.status < OrderStatus.EXPRESS) {
             order.address.country_short = util.getCountryShortName(order.country);
             order.address.state_short = util.getStateShortName(order.state, order.address.country_short);
+        }
+        order.approval_url = '#';
+        if (order.status === OrderStatus.CREATED && order.links) {
+            var link = order.links.filter(function(item){
+                return item.rel == 'approval_url';
+            })[0];
+            if (link) {
+                order.approval_url = link.href;
+            }
         }
         order.amount_s = numeral(order.amount).format('0,0.00');
         order.shipping_fee_s = numeral(order.shipping_fee).format('0,0.00');
