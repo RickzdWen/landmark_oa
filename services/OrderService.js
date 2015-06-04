@@ -29,7 +29,13 @@ exports.placePaypalOrder = function(uid, data, carts) {
             var idArrays = carts.list.map(function(item){
                 return item.id;
             });
-            OrderLogModel.getInstance().log4Frontend(orderData, uid, OrderOperateType.CREATED).finally(function(){
+            orderData.id = res.insertId;
+            orderData.status = 0;
+            OrderLogModel.getInstance().log4Frontend(orderData, uid, OrderOperateType.CREATED).then(function(data){
+                console.log(data);
+            }, function(err){
+                console.log(err);
+            }).finally(function(){
                 CartModel.getInstance().deleteByCartIds(uid, idArrays).then(function(){
                     delay.resolve({
                         orderId : res.insertId,
@@ -55,14 +61,17 @@ exports.executePaypalPayment = function(uid, payerId, paymentId) {
         OrderModel.getInstance().getOrderByUidAndPaymentId(uid, paymentId),
         PaypalService.lookupPayment(paymentId)
     ]).then(function(resArray){
+        console.log('0---');
         var order = resArray[0];
         var paymentInfo = resArray[1];
         if (!order) {
             throw new CommonError('', 53001);
         }
-        if (paymentInfo.state != 'approved') {
-            throw new CommonError('', 54001);
-        }
+        console.log(paymentInfo);
+        console.log(paymentInfo.state);
+//        if (paymentInfo.state != 'approved') {
+//            throw new CommonError('', 54001);
+//        }
         var carts = JSON.parse(order.cart_snapshot);
         var transaction = getTransactionByCarts(carts, order.amount, order.shipping_fee);
         PaypalService.executePayment(payerId, paymentId, transaction).then(function(payment){
@@ -246,17 +255,31 @@ exports.payAgain = function(uid, id) {
     var q = require('q');
     var delay = q.defer();
     OrderModel.getInstance().getOrderByIdAndUid(id, uid).then(function(order){
-        if (!order) {
-            throw new CommonError('', 54002);
-        }
-        if (order.status != OrderStatus.CREATED) {
-            throw new CommonError('', 54004);
-        }
+//        if (!order) {
+//            throw new CommonError('', 54002);
+//        }
+//        if (order.status != OrderStatus.CREATED) {
+//            throw new CommonError('', 54004);
+//        }
+        console.log(order.pay_id);
         PaypalService.lookupPayment(order.pay_id).then(function(payment){
-        })
+//            if (payment.state != 'created') {
+//                throw new CommonError('', 54004);
+//            }
+//            var urls = payment.transactions && payment.transactions[0] && payment.transactions[0].related_resources &&
+//                payment.transactions[0].related_resources[0] && payment.transactions[0].related_resources[0].sale &&
+//                payment.transactions[0].related_resources[0].sale.links;
+//            var approval_url = urls.filter(function(item){
+//                return item
+//            })
+            delay.resolve(payment);
+        }, function(err){
+            delay.reject(err);
+        });
     }, function(err){
         delay.reject(err);
     });
+    return delay.promise;
 };
 
 function constructOrderData(uid, data, carts, type) {
@@ -267,7 +290,7 @@ function constructOrderData(uid, data, carts, type) {
     var total = carts.totalPrice;
     var amount = +data.amount;
     var shipping = +data.shipping_fee;
-    if (!carts.list || !carts.list.length || amount != (+total + shipping)) {
+    if (!carts.list || !carts.list.length || amount.toFixed(2) != (+total + shipping).toFixed(2)) {
         throw new CommonError('', 500002);
     }
     var orderData = {
@@ -344,10 +367,15 @@ function log(id, uid, operateType, type) {
     OrderModel.getInstance().getOne('id=?', [id]).then(function(order){
         if (!order) {
             delay.reject('', 53001);
-        } else if (type === OrderLogModel.FRONTEND) {
-            return OrderLogModel.getInstance().log4Frontend(order, uid, operateType);
         } else {
-            return OrderLogModel.getInstance().log4Frontend(order, uid, operateType);
+            var ret = type === OrderLogModel.FRONTEND ? OrderLogModel.getInstance().log4Frontend(order, uid, operateType) :
+                OrderLogModel.getInstance().log4Frontend(order, uid, operateType);
+            OrderLogModel.getInstance().log4Frontend(order, uid, operateType);
+            ret.then(function(data){
+                delay.resolve(data);
+            }, function(err){
+                delay.reject(err);
+            });
         }
     }, function(err){
         delay.reject(err);
