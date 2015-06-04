@@ -28,6 +28,7 @@ module.exports = {
     54001 : 'Payment state error',
     54002 : 'Order not exists',
     54003 : 'Refund reason is required',
+    54004 : 'Can not pay for this order',
 
     60000 : 'System error'
 };

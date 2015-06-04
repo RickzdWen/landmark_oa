@@ -15,6 +15,10 @@ var OrderModel = declare([lmBase], {
         return this.getOne('uid=? AND pay_id=?', [uid, paymentId]);
     },
 
+    getOrderByIdAndUid : function(id, uid) {
+        return this.getOne('id=? AND uid=?', [id, uid]);
+    },
+
     updateStatus : function(id, status) {
         if (!id) {
             throw new CommonError('', 50002);

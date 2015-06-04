@@ -47,7 +47,7 @@ exports.createPayment = function(data) {
 
 exports.executePayment = function(payerId, paymentId, transaction) {
     if (!payerId || !paymentId) {
-        throw new CommonError('', 500002);
+        throw new CommonError('', 50002);
     }
     var details = {
         payer_id : payerId,

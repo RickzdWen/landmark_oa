@@ -3,12 +3,15 @@
  */
 
 var OrderModel = require(ROOT_PATH + '/models/OrderModel');
+var OrderLogModel = require(ROOT_PATH + '/models/OrderLogModel');
 var CartModel = require(ROOT_PATH + '/models/CartModel');
 var PaypalService = require(ROOT_PATH + '/services/PaypalService');
 var util = require(ROOT_PATH + '/libs/util');
 var CommonError = require(ROOT_PATH + '/libs/errors/CommonError');
 var PaymentType = require(ROOT_PATH + '/enum/PaymentType');
 var OrderStatus = require(ROOT_PATH + '/enum/OrderStatus');
+var OrderLogType = require(ROOT_PATH + '/enum/OrderLogType');
+var OrderOperateType = require(ROOT_PATH + '/enum/OrderOperateType');
 
 var paymentType = {
     0 : 'paypal'
@@ -26,13 +29,15 @@ exports.placePaypalOrder = function(uid, data, carts) {
             var idArrays = carts.list.map(function(item){
                 return item.id;
             });
-            CartModel.getInstance().deleteByCartIds(uid, idArrays).then(function(){
-                delay.resolve({
-                    orderId : res.insertId,
-                    payment : payment
+            OrderLogModel.getInstance().log4Frontend(orderData, uid, OrderOperateType.CREATED).finally(function(){
+                CartModel.getInstance().deleteByCartIds(uid, idArrays).then(function(){
+                    delay.resolve({
+                        orderId : res.insertId,
+                        payment : payment
+                    });
+                }, function(err){
+                    delay.reject(err);
                 });
-            }, function(err){
-                delay.reject(err);
             });
         }, function(err){
             delay.reject(err);
@@ -62,7 +67,9 @@ exports.executePaypalPayment = function(uid, payerId, paymentId) {
         var transaction = getTransactionByCarts(carts, order.amount, order.shipping_fee);
         PaypalService.executePayment(payerId, paymentId, transaction).then(function(payment){
             OrderModel.getInstance().updateStatus(order.id, OrderStatus.PAYMENT).then(function(){
-                delay.resolve(payment);
+                log(order.id, uid, OrderOperateType.PAYMENT).finally(function(){
+                    delay.resolve(payment);
+                });
             }, function(err){
                 delay.reject(err);
             });
@@ -155,36 +162,72 @@ exports.modifyOrderAddress = function(uid, id, data) {
         last_name : data.last_name,
         phone : data.phone
     };
-    return OrderModel.getInstance().update(addressInfo, 'id = ? AND uid = ? AND status < 2', [id, uid]);
+    var q = require('q');
+    var delay = q.defer();
+    OrderModel.getInstance().update(addressInfo, 'id = ? AND uid = ? AND status < 2', [id, uid]).then(function(data){
+        log(id, uid, OrderOperateType.MODIFY_SHIPPING).finally(function(){
+            delay.resolve(data);
+        });
+    }, function(err){
+        delay.reject(err);
+    });
+    return delay.promise;
 };
 
-exports.confirmReceive = function(uid, id) {
+exports.confirmReceive = function(uid, id, type) {
     if (!uid || !id) {
         throw new CommonError('', 50002);
     }
-    return OrderModel.getInstance().update({
+    var q = require('q');
+    var delay = q.defer();
+    OrderModel.getInstance().update({
         status : 3
-    }, 'id = ? AND uid =? AND status > 0 AND status < 3', [id, uid]);
+    }, 'id = ? AND uid =? AND status > 0 AND status < 3', [id, uid]).then(function(data){
+        log(id, uid, OrderOperateType.FINISH, type).finally(function(){
+            delay.resolve(data);
+        });
+    }, function(err){
+        delay.reject(err);
+    });
+    return delay.promise;
 };
 
 exports.applyPaypalRefund = function(uid, id, reason) {
     if (!uid || !id || !reason) {
         throw new CommonError('', 50002);
     }
-    return OrderModel.getInstance().update({
+    var q = require('q');
+    var delay = q.defer();
+    OrderModel.getInstance().update({
         status : 5,
         refund_reason : reason
-    }, 'id=? AND uid=? AND (status=1 OR status=5)', [id, uid]);
+    }, 'id=? AND uid=? AND (status=1 OR status=5)', [id, uid]).then(function(data){
+        log(id, uid, OrderOperateType.APPLY_REFUND).finally(function(){
+            delay.resolve(data);
+        });
+    }, function(err){
+        delay.reject(err);
+    });
+    return delay.promise;
 };
 
 exports.cancelPaypalRefund = function(uid, id) {
     if (!uid || !id) {
         throw new CommonError('', 50002);
     }
+    var q = require('q');
+    var delay = q.defer();
     return OrderModel.getInstance().update({
         status : 1,
         refund_reason : ''
-    }, 'id=? AND uid=? AND status=5', [id, uid]);
+    }, 'id=? AND uid=? AND status=5', [id, uid]).then(function(data){
+        log(id, uid, OrderOperateType.CANCEL_APPLY_REFUND).finally(function(){
+            delay.resolve(data);
+        });
+    }, function(err){
+        delay.reject(err);
+    });
+    return delay.promise;
 };
 
 exports.modifyRefundReason = function(uid, id, reason) {
@@ -194,6 +237,26 @@ exports.modifyRefundReason = function(uid, id, reason) {
     return OrderModel.getInstance().update({
         refund_reason : reason
     }, 'id=? AND uid=? AND status=5', [id, uid]);
+};
+
+exports.payAgain = function(uid, id) {
+    if (!uid || !id) {
+        throw new CommonError('', 50002);
+    }
+    var q = require('q');
+    var delay = q.defer();
+    OrderModel.getInstance().getOrderByIdAndUid(id, uid).then(function(order){
+        if (!order) {
+            throw new CommonError('', 54002);
+        }
+        if (order.status != OrderStatus.CREATED) {
+            throw new CommonError('', 54004);
+        }
+        PaypalService.lookupPayment(order.pay_id).then(function(payment){
+        })
+    }, function(err){
+        delay.reject(err);
+    });
 };
 
 function constructOrderData(uid, data, carts, type) {
@@ -271,4 +334,23 @@ function getTransactionByCarts(carts, amount, shipping, addressInfo) {
         }
     };
     return transaction;
+}
+
+function log(id, uid, operateType, type) {
+    var q = require('q');
+    type = type || OrderLogType.FRONTEND;
+    operateType = operateType || OrderOperateType.UNKNOWN;
+    var delay = q.defer();
+    OrderModel.getInstance().getOne('id=?', [id]).then(function(order){
+        if (!order) {
+            delay.reject('', 53001);
+        } else if (type === OrderLogModel.FRONTEND) {
+            return OrderLogModel.getInstance().log4Frontend(order, uid, operateType);
+        } else {
+            return OrderLogModel.getInstance().log4Frontend(order, uid, operateType);
+        }
+    }, function(err){
+        delay.reject(err);
+    });
+    return delay.promise;
 }
