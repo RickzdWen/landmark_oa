@@ -12,3 +12,4 @@ exports.APPLY_REFUND = 6;
 exports.REFUNDED = 7;
 exports.MODIFY_SHIPPING = 8;
 exports.CANCEL_APPLY_REFUND = 9;
+exports.PAY_AGAIN = 10;

@@ -30,20 +30,15 @@ exports.placePaypalOrder = function(uid, data, carts) {
                 return item.id;
             });
             orderData.id = res.insertId;
-            orderData.status = 0;
-            OrderLogModel.getInstance().log4Frontend(orderData, uid, OrderOperateType.CREATED).then(function(data){
-                console.log(data);
-            }, function(err){
-                console.log(err);
-            }).finally(function(){
-                CartModel.getInstance().deleteByCartIds(uid, idArrays).then(function(){
-                    delay.resolve({
-                        orderId : res.insertId,
-                        payment : payment
-                    });
-                }, function(err){
-                    delay.reject(err);
+            orderData.status = OrderStatus.CREATED;
+            OrderLogModel.getInstance().log4Frontend(orderData, uid, OrderOperateType.CREATED);
+            CartModel.getInstance().deleteByCartIds(uid, idArrays).then(function(){
+                delay.resolve({
+                    orderId : res.insertId,
+                    payment : payment
                 });
+            }, function(err){
+                delay.reject(err);
             });
         }, function(err){
             delay.reject(err);
@@ -61,24 +56,22 @@ exports.executePaypalPayment = function(uid, payerId, paymentId) {
         OrderModel.getInstance().getOrderByUidAndPaymentId(uid, paymentId),
         PaypalService.lookupPayment(paymentId)
     ]).then(function(resArray){
-        console.log('0---');
         var order = resArray[0];
         var paymentInfo = resArray[1];
         if (!order) {
-            throw new CommonError('', 53001);
+            delay.reject(new CommonError('', 53001));
+            return;
         }
-        console.log(paymentInfo);
-        console.log(paymentInfo.state);
-//        if (paymentInfo.state != 'approved') {
-//            throw new CommonError('', 54001);
-//        }
+        if (paymentInfo.state != 'created') {
+            delay.reject(new CommonError('', 54001));
+            return;
+        }
         var carts = JSON.parse(order.cart_snapshot);
         var transaction = getTransactionByCarts(carts, order.amount, order.shipping_fee);
         PaypalService.executePayment(payerId, paymentId, transaction).then(function(payment){
             OrderModel.getInstance().updateStatus(order.id, OrderStatus.PAYMENT).then(function(){
-                log(order.id, uid, OrderOperateType.PAYMENT).finally(function(){
-                    delay.resolve(payment);
-                });
+                log(order.id, uid, OrderOperateType.PAYMENT);
+                delay.resolve(payment);
             }, function(err){
                 delay.reject(err);
             });
@@ -121,7 +114,8 @@ exports.getOrderDetail = function(id, uid) {
     var delay = q.defer();
     OrderModel.getInstance().getOne('id = ? AND uid =?', [id, uid]).then(function(order){
         if (!order) {
-            throw new CommonError('', 54002);
+            delay.reject(new CommonError('', 54002));
+            return;
         }
         order.carts = JSON.parse(order.cart_snapshot);
         order.links = order.links && JSON.parse(order.links);
@@ -174,9 +168,8 @@ exports.modifyOrderAddress = function(uid, id, data) {
     var q = require('q');
     var delay = q.defer();
     OrderModel.getInstance().update(addressInfo, 'id = ? AND uid = ? AND status < 2', [id, uid]).then(function(data){
-        log(id, uid, OrderOperateType.MODIFY_SHIPPING).finally(function(){
-            delay.resolve(data);
-        });
+        log(id, uid, OrderOperateType.MODIFY_SHIPPING);
+        delay.resolve(data);
     }, function(err){
         delay.reject(err);
     });
@@ -192,9 +185,8 @@ exports.confirmReceive = function(uid, id, type) {
     OrderModel.getInstance().update({
         status : 3
     }, 'id = ? AND uid =? AND status > 0 AND status < 3', [id, uid]).then(function(data){
-        log(id, uid, OrderOperateType.FINISH, type).finally(function(){
-            delay.resolve(data);
-        });
+        log(id, uid, OrderOperateType.FINISH, type);
+        delay.resolve(data);
     }, function(err){
         delay.reject(err);
     });
@@ -211,9 +203,8 @@ exports.applyPaypalRefund = function(uid, id, reason) {
         status : 5,
         refund_reason : reason
     }, 'id=? AND uid=? AND (status=1 OR status=5)', [id, uid]).then(function(data){
-        log(id, uid, OrderOperateType.APPLY_REFUND).finally(function(){
-            delay.resolve(data);
-        });
+        log(id, uid, OrderOperateType.APPLY_REFUND);
+        delay.resolve(data);
     }, function(err){
         delay.reject(err);
     });
@@ -230,9 +221,8 @@ exports.cancelPaypalRefund = function(uid, id) {
         status : 1,
         refund_reason : ''
     }, 'id=? AND uid=? AND status=5', [id, uid]).then(function(data){
-        log(id, uid, OrderOperateType.CANCEL_APPLY_REFUND).finally(function(){
-            delay.resolve(data);
-        });
+        log(id, uid, OrderOperateType.CANCEL_APPLY_REFUND);
+        delay.resolve(data);
     }, function(err){
         delay.reject(err);
     });
@@ -255,24 +245,29 @@ exports.payAgain = function(uid, id) {
     var q = require('q');
     var delay = q.defer();
     OrderModel.getInstance().getOrderByIdAndUid(id, uid).then(function(order){
-//        if (!order) {
-//            throw new CommonError('', 54002);
-//        }
-//        if (order.status != OrderStatus.CREATED) {
-//            throw new CommonError('', 54004);
-//        }
-        console.log(order.pay_id);
-        PaypalService.lookupPayment(order.pay_id).then(function(payment){
-//            if (payment.state != 'created') {
-//                throw new CommonError('', 54004);
-//            }
-//            var urls = payment.transactions && payment.transactions[0] && payment.transactions[0].related_resources &&
-//                payment.transactions[0].related_resources[0] && payment.transactions[0].related_resources[0].sale &&
-//                payment.transactions[0].related_resources[0].sale.links;
-//            var approval_url = urls.filter(function(item){
-//                return item
-//            })
-            delay.resolve(payment);
+        if (!order) {
+            delay.reject(new CommonError('', 54002));
+            return;
+        }
+        if (order.status != OrderStatus.CREATED) {
+            delay.reject(new CommonError('', 54004));
+            return;
+        }
+        var carts = JSON.parse(order.cart_snapshot);
+        var transaction = getTransactionByCarts(carts, order.amount, order.shipping_fee);
+        PaypalService.createPayment({
+            transaction : transaction,
+            method : paymentType[order.payment_type]
+        }).then(function(payment){
+            OrderModel.getInstance().update({
+                pay_id : payment.id,
+                links : JSON.stringify(payment.links)
+            }, 'id=? AND status=?', [id, OrderStatus.CREATED]).then(function(){
+                log(id, uid, OrderOperateType.PAY_AGAIN);
+                delay.resolve(payment);
+            }, function(err){
+                delay.reject(err);
+            });
         }, function(err){
             delay.reject(err);
         });
@@ -366,16 +361,21 @@ function log(id, uid, operateType, type) {
     var delay = q.defer();
     OrderModel.getInstance().getOne('id=?', [id]).then(function(order){
         if (!order) {
-            delay.reject('', 53001);
+            delay.reject(new CommonError('', 53001));
         } else {
-            var ret = type === OrderLogModel.FRONTEND ? OrderLogModel.getInstance().log4Frontend(order, uid, operateType) :
-                OrderLogModel.getInstance().log4Frontend(order, uid, operateType);
-            OrderLogModel.getInstance().log4Frontend(order, uid, operateType);
-            ret.then(function(data){
-                delay.resolve(data);
-            }, function(err){
-                delay.reject(err);
-            });
+            if (type === OrderLogModel.FRONTEND) {
+                OrderLogModel.getInstance().log4Frontend(order, uid, operateType).then(function(data){
+                    delay.resolve(data);
+                }, function(err){
+                    delay.reject(err);
+                });
+            } else {
+                OrderLogModel.getInstance().log4Backend(order, uid, operateType).then(function(data){
+                    delay.resolve(data);
+                }, function(err){
+                    delay.reject(err);
+                });
+            }
         }
     }, function(err){
         delay.reject(err);
