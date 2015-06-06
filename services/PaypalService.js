@@ -25,8 +25,8 @@ exports.createPayment = function(data) {
             },
             transactions : [data.transaction],
             redirect_urls : {
-                return_url : data.returnUrl || 'http://localhost:3000/account/paypal/return',
-                cancel_url : data.cancelUrl || 'http://localhost:3000/account/paypal/return_cancel'
+                return_url : data.returnUrl || 'http://www.land-mark-shop.com/account/paypal/return',
+                cancel_url : data.cancelUrl || 'http://www.land-mark-shop.com/account/paypal/return_cancel'
             }
         };
         paypal_sdk.payment.create(details, function(error, payment){
