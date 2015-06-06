@@ -79,6 +79,7 @@ ModelBase.prototype.getByPage = function(sql, cond, selector, page, pageLimit) {
                 defered.reject(err);
             });
         } else {
+            ret.result = [];
             defered.resolve(ret);
         }
     }, function(err){
