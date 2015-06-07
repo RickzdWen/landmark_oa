@@ -217,7 +217,7 @@ exports.cancelPaypalRefund = function(uid, id) {
     }
     var q = require('q');
     var delay = q.defer();
-    return OrderModel.getInstance().update({
+    OrderModel.getInstance().update({
         status : 1,
         refund_reason : ''
     }, 'id=? AND uid=? AND status=5', [id, uid]).then(function(data){
@@ -271,6 +271,24 @@ exports.payAgain = function(uid, id) {
         }, function(err){
             delay.reject(err);
         });
+    }, function(err){
+        delay.reject(err);
+    });
+    return delay.promise;
+};
+
+exports.cancelOrder = function(uid, id) {
+    if (!uid || !id) {
+        throw new CommonError('', 50002);
+    }
+    var q = require('q');
+    var delay = q.defer();
+    OrderModel.getInstance().update({
+        status : OrderStatus.CANCEL,
+        refund_reason : ''
+    }, 'id=? AND uid=? AND status=?', [id, uid, OrderStatus.CREATED]).then(function(data){
+        log(id, uid, OrderOperateType.CANCEL);
+        delay.resolve(data);
     }, function(err){
         delay.reject(err);
     });
